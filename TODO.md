@@ -1,5 +1,9 @@
 # PRESS PLAY. 구현 결과
 
+## 순수 프론트엔드 구현
+- [x] 활성 웹 진입점은 `client/index.html`에서 `client/src/main.js`를 직접 로드한다.
+- [x] 시각 시스템은 `client/src/styles.css`, 인터랙션과 DOM 렌더링은 `client/src/main.js`에서 처리한다.
+
 ## 김예일 디자이너 진입 랜딩
 - [x] 사이트 진입 시 김예일이라는 디자이너의 이름, 역할, 작업 태도와 피아노 건반을 그린 시그니처 원라인 아트를 정의하는 랜딩 화면을 먼저 보여준다.
 - [x] 랜딩 화면에서 `ENTER THE INDEX` 버튼 또는 Enter 키로 기존 Press Play 작품 인덱스에 진입한다.
