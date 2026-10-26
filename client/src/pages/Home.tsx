@@ -108,11 +108,63 @@ function OneLineArt({ variant }: { variant: ArtworkVariant }) {
   );
 }
 
+function Landing({ onEnter, isLeaving }: { onEnter: () => void; isLeaving: boolean }) {
+  return (
+    <div className={`landing-shell ${isLeaving ? "is-leaving" : ""}`}>
+      <header className="landing-topbar">
+        <span className="landing-mark">PRESS PLAY<span>.</span></span>
+        <span className="landing-edition">KIM YEIL / DESIGNER</span>
+        <span className="landing-location">SEOUL — 2026</span>
+      </header>
+
+      <main className="landing-main">
+        <section className="landing-intro">
+          <p className="landing-overline">VISUAL DESIGNER / ART DIRECTOR</p>
+          <h1>Kim<br /><em>Yeil</em></h1>
+          <p className="landing-statement">
+            A designer making quiet things<br className="desktop-break" /> move.
+          </p>
+          <p className="landing-description">
+            Kim Yeil works across identity, objects, and moving images — finding the line between a precise idea and the feeling it leaves behind.
+          </p>
+        </section>
+
+        <section className="landing-art" aria-label="Kim Yeil one-line signature artwork">
+          <div className="landing-art-label landing-art-label--top">A LINE IS A BEGINNING</div>
+          <div className="landing-art-label landing-art-label--side">SELECTED PRACTICE / 2025—26</div>
+          <OneLineArt variant="bloom" />
+          <div className="landing-art-caption">ONE-LINE STUDY <span>01</span></div>
+        </section>
+      </main>
+
+      <footer className="landing-footer">
+        <div className="landing-footer-note">
+          <span className="landing-footer-dot" />
+          <span>AN INDEX OF WORKS IN MOTION</span>
+        </div>
+        <button className="enter-index" type="button" onClick={onEnter} disabled={isLeaving}>
+          <span>ENTER THE INDEX</span>
+          <span className="enter-index-arrow">↗</span>
+        </button>
+        <span className="landing-key-hint">PRESS ENTER / CLICK TO BEGIN</span>
+      </footer>
+    </div>
+  );
+}
+
 function Home() {
   const [activeIndex, setActiveIndex] = useState(0);
   const [pressedKey, setPressedKey] = useState<string | null>(null);
   const [isAboutOpen, setIsAboutOpen] = useState(false);
+  const [hasEntered, setHasEntered] = useState(false);
+  const [isLeaving, setIsLeaving] = useState(false);
   const activeArtwork = artworks[activeIndex];
+
+  const enterIndex = () => {
+    if (isLeaving) return;
+    setIsLeaving(true);
+    window.setTimeout(() => setHasEntered(true), 420);
+  };
 
   const selectArtwork = (index: number) => {
     setActiveIndex(index);
@@ -122,6 +174,10 @@ function Home() {
 
   useEffect(() => {
     const handleKeyDown = (event: KeyboardEvent) => {
+      if (!hasEntered) {
+        if (event.key === "Enter" || event.key === " ") enterIndex();
+        return;
+      }
       if (event.repeat) return;
       const index = Number(event.key) - 1;
       if (index >= 0 && index < artworks.length) {
@@ -131,7 +187,11 @@ function Home() {
 
     window.addEventListener("keydown", handleKeyDown);
     return () => window.removeEventListener("keydown", handleKeyDown);
-  }, []);
+  }, [hasEntered]);
+
+  if (!hasEntered) {
+    return <Landing onEnter={enterIndex} isLeaving={isLeaving} />;
+  }
 
   return (
     <div className="press-play-shell">
