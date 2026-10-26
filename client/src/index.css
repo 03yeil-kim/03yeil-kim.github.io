@@ -554,51 +554,63 @@
   }
 
   .piano-keys {
+    position: relative;
     display: grid;
     grid-template-columns: repeat(4, 1fr);
-    gap: 8px;
+    gap: 0;
+    border: 1px solid var(--foreground);
+    box-shadow: 0 5px 0 var(--foreground);
   }
 
   .piano-key {
     position: relative;
-    min-height: 82px;
-    padding: 23px 18px 13px;
-    border: 1px solid var(--foreground);
-    border-radius: 0 0 3px 3px;
+    z-index: 1;
+    min-height: 88px;
+    padding: 27px 18px 13px;
+    border: 0;
+    border-left: 1px solid rgba(23, 23, 23, 0.36);
+    border-radius: 0 0 2px 2px;
     color: var(--foreground);
-    background: #e9e3d9;
-    box-shadow: 0 5px 0 var(--foreground);
+    background: linear-gradient(to bottom, #f4efe6 0%, #ebe4d9 75%, #d8d0c4 75%, #d8d0c4 100%);
     cursor: pointer;
     text-align: left;
     transition: background 180ms ease, color 180ms ease, transform 180ms ease, box-shadow 180ms ease;
   }
 
+  .piano-key:first-child {
+    border-left: 0;
+  }
+
   .piano-key:hover {
-    background: #ddd5c9;
+    background: linear-gradient(to bottom, #fffaf0 0%, #eee7dc 75%, #d8d0c4 75%, #d8d0c4 100%);
   }
 
   .piano-key.is-active,
   .piano-key.is-pressed {
     color: var(--background);
-    background: var(--foreground);
+    background: linear-gradient(to bottom, #292929 0%, #171717 75%, #0e0e0e 75%, #0e0e0e 100%);
     transform: translateY(5px);
-    box-shadow: 0 0 0 var(--foreground);
+    box-shadow: inset 0 4px 0 var(--accent);
   }
 
   .key-cap {
     position: absolute;
-    top: 0;
+    z-index: 2;
+    top: -1px;
     left: 50%;
-    width: 29%;
-    min-width: 28px;
-    height: 7px;
+    width: 34%;
+    min-width: 24px;
+    height: 23px;
     transform: translateX(-50%);
     background: var(--foreground);
+    border-radius: 0 0 3px 3px;
+    box-shadow: 0 2px 2px rgba(23, 23, 23, 0.17);
   }
 
   .piano-key.is-active .key-cap,
   .piano-key.is-pressed .key-cap {
     background: var(--accent);
+    box-shadow: none;
   }
 
   .key-number,
@@ -616,6 +628,11 @@
   .piano-key.is-active .key-number,
   .piano-key.is-pressed .key-number {
     color: #b8b2a8;
+  }
+
+  .piano-key.is-active .key-arrow,
+  .piano-key.is-pressed .key-arrow {
+    color: #e4a58d;
   }
 
   .key-name {
@@ -844,12 +861,16 @@
     }
 
     .piano-keys {
-      gap: 5px;
+      gap: 0;
     }
 
     .piano-key {
       min-height: 75px;
       padding: 20px 10px 11px;
+    }
+
+    .key-cap {
+      height: 19px;
     }
 
     .key-name {
