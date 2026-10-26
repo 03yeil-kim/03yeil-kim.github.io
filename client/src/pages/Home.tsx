@@ -146,7 +146,7 @@ function Landing({ onEnter, isLeaving }: { onEnter: () => void; isLeaving: boole
           <span>ENTER THE INDEX</span>
           <span className="enter-index-arrow">↗</span>
         </button>
-        <span className="landing-key-hint">PRESS ENTER / CLICK TO BEGIN</span>
+        <span className="landing-key-hint">PRESS ENTER TO BEGIN</span>
       </footer>
     </div>
   );
@@ -196,12 +196,12 @@ function Home() {
   return (
     <div className="press-play-shell">
       <header className="topbar">
-        <button className="wordmark" type="button" onClick={() => selectArtwork(0)} aria-label="Return to first work">
+        <button className="wordmark" type="button" onClick={() => { setHasEntered(false); setIsLeaving(false); setIsAboutOpen(false); setActiveIndex(0); }} aria-label="Return to Kim Yeil introduction">
           <span>PRESS</span> PLAY<span className="wordmark-period">.</span>
         </button>
         <div className="topbar-center" aria-hidden="true">
           <span className="topbar-rule" />
-          <span>AN INTERACTIVE ART INDEX</span>
+          <span>KIM YEIL / SELECTED WORKS</span>
           <span className="topbar-rule" />
         </div>
         <div className="topbar-right">
@@ -213,8 +213,9 @@ function Home() {
       </header>
 
       {isAboutOpen && (
-        <aside className="about-panel" aria-label="About Press Play">
-          <p className="eyebrow">THE IDEA</p>
+        <aside className="about-panel" aria-label="About Kim Yeil and Press Play">
+          <p className="eyebrow">ABOUT THE PRACTICE</p>
+          <p>Kim Yeil is a Seoul-based visual designer and art director working across identity, objects, and moving images.</p>
           <p>Press Play is a small archive of moving lines. Choose a key, give it a moment, and let the work play.</p>
           <p className="about-note">Use the keys 1—4 or click below.</p>
         </aside>
@@ -257,7 +258,7 @@ function Home() {
 
       <footer className="key-dock">
         <div className="dock-intro">
-          <p className="eyebrow">CHOOSE A PIECE</p>
+          <p className="eyebrow">SELECTED WORKS</p>
           <p className="dock-instruction">Press a key<br className="desktop-break" /> to play.</p>
         </div>
         <div className="piano-keys" role="group" aria-label="Choose a piece">
