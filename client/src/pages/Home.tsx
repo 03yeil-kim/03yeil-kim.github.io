@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 
-type ArtworkVariant = "contour" | "orbit" | "ripple" | "bloom";
+type ArtworkVariant = "contour" | "orbit" | "ripple" | "bloom" | "piano";
 
 type Artwork = {
   key: string;
@@ -61,6 +61,19 @@ const artworks: Artwork[] = [
 ];
 
 function OneLineArt({ variant }: { variant: ArtworkVariant }) {
+  if (variant === "piano") {
+    return (
+      <svg className="line-art line-art--piano" viewBox="0 0 560 480" role="img" aria-label="Piano keyboard one-line artwork">
+        <path className="art-stroke art-stroke--main" pathLength="1" d="M105 159h346v181H105z" />
+        <path className="art-stroke art-stroke--secondary" pathLength="1" d="M105 159l36-29h345l-35 29m35-29v181l-35 29" />
+        <path className="art-stroke art-stroke--fine" pathLength="1" d="M155 159v181m50-181v181m50-181v181m50-181v181m50-181v181m50-181v181m50-181v181" />
+        <path className="art-stroke art-stroke--main" pathLength="1" d="M146 159v58h25v-58m35 0v58h25v-58m85 0v58h25v-58m35 0v58h25v-58m35 0v58h25v-58" />
+        <path className="art-stroke art-stroke--fine" pathLength="1" d="M70 228c24-39 52-57 84-55m-84 55c-12 18-18 37-18 57 0 61 49 111 110 111" />
+        <circle className="art-dot art-dot--large" cx="462" cy="114" r="7" />
+      </svg>
+    );
+  }
+
   if (variant === "contour") {
     return (
       <svg className="line-art line-art--contour" viewBox="0 0 560 480" role="img" aria-label="Contour one-line artwork">
@@ -129,11 +142,11 @@ function Landing({ onEnter, isLeaving }: { onEnter: () => void; isLeaving: boole
           </p>
         </section>
 
-        <section className="landing-art" aria-label="Kim Yeil one-line signature artwork">
+        <section className="landing-art" aria-label="Kim Yeil piano keyboard one-line signature artwork">
           <div className="landing-art-label landing-art-label--top">A LINE IS A BEGINNING</div>
           <div className="landing-art-label landing-art-label--side">SELECTED PRACTICE / 2025—26</div>
-          <OneLineArt variant="bloom" />
-          <div className="landing-art-caption">ONE-LINE STUDY <span>01</span></div>
+          <OneLineArt variant="piano" />
+          <div className="landing-art-caption">PIANO STUDY <span>01</span></div>
         </section>
       </main>
 
