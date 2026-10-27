@@ -44,8 +44,10 @@ const artworks = [
 ];
 
 const root = document.getElementById("root");
+const prefersReducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 let activeIndex = 0;
 let currentScreen = "landing";
+let transitionLock = false;
 
 const lineArt = {
   piano: () => `
@@ -91,10 +93,11 @@ const lineArt = {
     </svg>`,
 };
 
-function renderLanding() {
+function renderLanding({ returning = false } = {}) {
   currentScreen = "landing";
+  transitionLock = false;
   root.innerHTML = `
-    <div class="landing-shell">
+    <div class="landing-shell ${returning ? "is-returning" : ""}">
       <header class="landing-topbar">
         <span class="landing-mark">PRESS PLAY<span>.</span></span>
         <span class="landing-edition">KIM YEIL / DESIGNER</span>
@@ -121,15 +124,24 @@ function renderLanding() {
       </footer>
     </div>`;
 
-  root.querySelector(".enter-index").addEventListener("click", renderIndex);
+  root.querySelector(".enter-index").addEventListener("click", startIndexTransition);
 }
 
-function renderIndex(index = activeIndex) {
+function startIndexTransition() {
+  if (transitionLock || currentScreen !== "landing") return;
+  transitionLock = true;
+  root.querySelector(".landing-shell")?.classList.add("is-pressing");
+  root.insertAdjacentHTML("beforeend", `<div class="route-transition" aria-hidden="true"><span class="route-transition__line"></span><span class="route-transition__label">PRESS / PLAY</span></div>`);
+  window.setTimeout(() => renderIndex(0, { arriving: true }), prefersReducedMotion ? 40 : 560);
+}
+
+function renderIndex(index = activeIndex, { arriving = false } = {}) {
   currentScreen = "index";
   activeIndex = index;
+  transitionLock = arriving;
   const artwork = artworks[activeIndex];
   root.innerHTML = `
-    <div class="press-play-shell">
+    <div class="press-play-shell ${arriving ? "is-arriving" : ""}">
       <header class="topbar">
         <button class="wordmark" type="button" aria-label="Return to Kim Yeil introduction"><span>PRESS</span> PLAY<span class="wordmark-period">.</span></button>
         <div class="topbar-center" aria-hidden="true"><span class="topbar-rule"></span><span>KIM YEIL / SELECTED WORKS</span><span class="topbar-rule"></span></div>
@@ -154,9 +166,10 @@ function renderIndex(index = activeIndex) {
         </div>
         <div class="dock-side-note" aria-hidden="true"><span>01</span><span class="dock-side-line"></span><span>04</span></div>
       </footer>
+      ${arriving ? `<div class="route-transition route-transition--reveal" aria-hidden="true"><span class="route-transition__line"></span><span class="route-transition__label">PLAYING 01 / 04</span></div>` : ""}
     </div>`;
 
-  root.querySelector(".wordmark").addEventListener("click", renderLanding);
+  root.querySelector(".wordmark").addEventListener("click", () => renderLanding({ returning: true }));
   root.querySelector(".about-toggle").addEventListener("click", toggleAbout);
   root.querySelectorAll(".piano-key").forEach((button) => {
     button.addEventListener("click", () => renderIndex(Number(button.dataset.index)));
@@ -164,7 +177,9 @@ function renderIndex(index = activeIndex) {
 
   window.setTimeout(() => {
     root.querySelector(".piano-key.is-pressed")?.classList.remove("is-pressed");
-  }, 260);
+    transitionLock = false;
+    root.querySelector(".route-transition--reveal")?.remove();
+  }, arriving ? (prefersReducedMotion ? 80 : 780) : (prefersReducedMotion ? 60 : 260));
 }
 
 function toggleAbout() {
@@ -183,8 +198,9 @@ function toggleAbout() {
 }
 
 window.addEventListener("keydown", (event) => {
+  if (transitionLock) return;
   if (currentScreen === "landing") {
-    if (event.key === "Enter" || event.key === " ") renderIndex();
+    if (event.key === "Enter" || event.key === " ") startIndexTransition();
     return;
   }
   if (event.repeat) return;

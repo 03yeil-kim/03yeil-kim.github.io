@@ -1,5 +1,11 @@
 # PRESS PLAY. 구현 결과
 
+## 유저플로우 기반 재구성
+- [x] `LANDING → PRESS → DRAW / OPEN → INDEX → PLAY → RETURN` 상태 흐름으로 화면을 다시 연결한다.
+- [x] `ENTER THE INDEX`와 Enter 키가 동일한 진입 전환을 실행한다.
+- [x] 전환 중 하나의 원라인이 랜딩에서 작품 인덱스로 이어지는 시각적 연결을 제공한다.
+- [x] 숫자키 1–4, 마우스, 터치가 동일한 작품 선택 결과를 만든다.
+
 ## 순수 프론트엔드 구현
 - [x] 활성 웹 진입점은 `client/index.html`에서 `client/src/main.js`를 직접 로드한다.
 - [x] 시각 시스템은 `client/src/styles.css`, 인터랙션과 DOM 렌더링은 `client/src/main.js`에서 처리한다.
