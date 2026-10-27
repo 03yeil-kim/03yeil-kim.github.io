@@ -333,6 +333,22 @@
     margin: 30px 0 0 30px;
   }
 
+  .landing-art picture {
+    display: block;
+    width: min(88%, 510px);
+    max-height: 88%;
+    margin: 26px 0 0 30px;
+    animation: patent-image-in 900ms 180ms cubic-bezier(0.2, 0.75, 0.2, 1) both;
+  }
+
+  .landing-art-image {
+    display: block;
+    width: 100%;
+    max-height: 100%;
+    object-fit: contain;
+    mix-blend-mode: multiply;
+  }
+
   .line-art--piano .diagram-grid path {
     fill: none;
     stroke: var(--muted-foreground);
@@ -1089,6 +1105,11 @@
   @keyframes landing-art-in {
     from { opacity: 0; transform: translateX(18px); }
     to { opacity: 1; transform: translateX(0); }
+  }
+
+  @keyframes patent-image-in {
+    from { opacity: 0; transform: translateY(10px) scale(0.985); }
+    to { opacity: 1; transform: translateY(0) scale(1); }
   }
 
   @keyframes landing-return {

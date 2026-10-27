@@ -138,7 +138,10 @@ function renderLanding({ returning = false } = {}) {
         <section class="landing-art" aria-label="Kim Yeil piano keyboard one-line signature artwork">
           <div class="landing-art-label landing-art-label--top">PATENT STUDY / GRAND PIANO</div>
           <div class="landing-art-label landing-art-label--side">STRUCTURAL INDEX / 01—04</div>
-          ${lineArt.piano()}
+          <picture>
+            <source srcset="/assets/kim-yeil-piano-patent.webp" type="image/webp" />
+            <img class="landing-art-image" src="/assets/kim-yeil-piano-patent.png" alt="Grand piano patent drawing with keyboard, internal strings, structural callouts, and section details" />
+          </picture>
           <div class="landing-art-caption">DRAWING 01 <span>PLATE A</span></div>
         </section>
       </main>
