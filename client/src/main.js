@@ -68,14 +68,14 @@ const patentFocus = [
 ];
 
 const keyboardPhrases = [
-  [2, 5, 8, 5],
-  [9, 7, 10, 12],
-  [4, 6, 9, 11],
-  [12, 10, 7, 5],
-  [3, 6, 8, 11],
+  [0, 2, 4, 7, 5, 3],
+  [8, 10, 12, 14, 12, 10],
+  [3, 6, 9, 11, 9, 6],
+  [14, 12, 10, 8, 7, 5],
+  [1, 4, 7, 10, 8, 5],
 ];
 
-const keyboardRhythm = [0, 150, 325, 515];
+const keyboardRhythm = [0, 125, 275, 445, 625, 790];
 
 function clearPatentTimers() {
   patentTimers.forEach((timer) => window.clearTimeout(timer));
@@ -116,7 +116,7 @@ function playKeyboardPhrase(phraseIndex = 0) {
       key.classList.remove("is-playing");
       void key.getBoundingClientRect();
       key.classList.add("is-playing");
-      const releaseTimer = window.setTimeout(() => key.classList.remove("is-playing"), prefersReducedMotion ? 1 : 265);
+      const releaseTimer = window.setTimeout(() => key.classList.remove("is-playing"), prefersReducedMotion ? 1 : 330);
       keyboardTimers.push(releaseTimer);
     }, prefersReducedMotion ? noteIndex * 30 : keyboardRhythm[noteIndex]);
     keyboardTimers.push(timer);
@@ -200,14 +200,14 @@ function playPatentSequence() {
         [{ transform: `translate(${index === 0 ? 0 : patentSequence[index - 1].x}px, ${index === 0 ? 0 : patentSequence[index - 1].y}px)` }, { transform: `translate(${item.x}px, ${item.y}px)` }],
         { duration: prefersReducedMotion ? 1 : 620, easing: "cubic-bezier(.2,.8,.2,1)", fill: "forwards" },
       );
-    }, prefersReducedMotion ? index * 45 : 620 + index * 760);
+    }, prefersReducedMotion ? index * 45 : 620 + index * 920);
     patentTimers.push(timer);
   });
 
   const resetTimer = window.setTimeout(() => {
     setPatentCamera(null);
     overlay.querySelectorAll(".patent-step").forEach((step) => step.classList.remove("is-active"));
-  }, prefersReducedMotion ? 260 : 5300);
+  }, prefersReducedMotion ? 260 : 6000);
   patentTimers.push(resetTimer);
 }
 
