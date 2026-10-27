@@ -249,8 +249,8 @@ function renderLanding({ returning = false } = {}) {
           <div class="patent-plate">
             <div class="patent-artwork">
               <picture>
-                <source srcset="/assets/kim-yeil-piano-patent.webp" type="image/webp" />
-                <img class="landing-art-image" src="/assets/kim-yeil-piano-patent.png" alt="Grand piano patent drawing with keyboard, internal strings, structural callouts, and section details" />
+                <source srcset="/assets/kim-yeil-piano-cutout.webp" type="image/webp" />
+                <img class="landing-art-image" src="/assets/kim-yeil-piano-cutout.png" alt="Transparent grand piano technical drawing with keyboard, internal strings, and structural callouts" />
               </picture>
               ${patentOverlay()}
             </div>
