@@ -10,6 +10,12 @@ const artworks = [
     detail: "INK / DIGITAL LINE",
     year: "2026",
     variant: "contour",
+    gallery: [
+      { kind: "line", variant: "contour", label: "PRIMARY FORM" },
+      { kind: "line", variant: "piano", label: "STRUCTURE STUDY" },
+      { kind: "line", variant: "contour", label: "DETAIL / 01" },
+    ],
+    project: { client: "Independent Study", role: "Art Direction / Visual Design", medium: "Digital Line / Identity", url: "" },
   },
   {
     key: "2",
@@ -20,6 +26,12 @@ const artworks = [
     detail: "VECTOR / MOTION STUDY",
     year: "2026",
     variant: "orbit",
+    gallery: [
+      { kind: "line", variant: "orbit", label: "PRIMARY FORM" },
+      { kind: "line", variant: "ripple", label: "MOTION STUDY" },
+      { kind: "line", variant: "orbit", label: "DETAIL / 02" },
+    ],
+    project: { client: "Independent Study", role: "Visual Design / Motion", medium: "Vector / Motion Study", url: "" },
   },
   {
     key: "3",
@@ -30,6 +42,12 @@ const artworks = [
     detail: "GENERATIVE / LINE SCORE",
     year: "2025",
     variant: "ripple",
+    gallery: [
+      { kind: "line", variant: "ripple", label: "PRIMARY FORM" },
+      { kind: "line", variant: "contour", label: "LINE SCORE" },
+      { kind: "line", variant: "ripple", label: "DETAIL / 03" },
+    ],
+    project: { client: "Moving Image Study", role: "Concept / Generative Design", medium: "Generative / Line Score", url: "" },
   },
   {
     key: "4",
@@ -40,12 +58,19 @@ const artworks = [
     detail: "INK / OBSERVATION",
     year: "2025",
     variant: "bloom",
+    gallery: [
+      { kind: "line", variant: "bloom", label: "PRIMARY FORM" },
+      { kind: "line", variant: "orbit", label: "OBSERVATION STUDY" },
+      { kind: "line", variant: "bloom", label: "DETAIL / 04" },
+    ],
+    project: { client: "Independent Study", role: "Art Direction / Drawing", medium: "Ink / Observation", url: "" },
   },
 ];
 
 const root = document.getElementById("root");
 const prefersReducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 let activeIndex = 0;
+let galleryIndex = 0;
 let currentScreen = "landing";
 let transitionLock = false;
 let patentTimers = [];
@@ -301,6 +326,45 @@ const lineArt = {
     </svg>`,
 };
 
+function gallerySlideMarkup(slide, artwork) {
+  if (slide.kind === "image") {
+    return `<img class="artwork-photo" src="${slide.src}" alt="${slide.alt || `${artwork.title} image`}" loading="lazy" />`;
+  }
+  return lineArt[slide.variant || artwork.variant]();
+}
+
+function updateGallery(artwork, nextIndex) {
+  const slides = artwork.gallery || [{ kind: "line", variant: artwork.variant, label: "PRIMARY FORM" }];
+  galleryIndex = (nextIndex + slides.length) % slides.length;
+  const slide = slides[galleryIndex];
+  const viewport = root.querySelector("[data-gallery-viewport]");
+  const counter = root.querySelector("[data-gallery-counter]");
+  const caption = root.querySelector("[data-gallery-caption]");
+  if (!viewport || !counter || !caption) return;
+  viewport.classList.add("is-changing");
+  window.setTimeout(() => {
+    viewport.innerHTML = gallerySlideMarkup(slide, artwork);
+    viewport.classList.remove("is-changing");
+    counter.textContent = `${String(galleryIndex + 1).padStart(2, "0")} / ${String(slides.length).padStart(2, "0")}`;
+    caption.textContent = slide.label || `VIEW ${String(galleryIndex + 1).padStart(2, "0")}`;
+  }, prefersReducedMotion ? 1 : 160);
+}
+
+function galleryMarkup(artwork) {
+  const slides = artwork.gallery || [{ kind: "line", variant: artwork.variant, label: "PRIMARY FORM" }];
+  const slide = slides[galleryIndex] || slides[0];
+  return `
+    <div class="artwork-gallery" aria-label="${artwork.title} image gallery">
+      <button class="gallery-arrow gallery-arrow--prev" type="button" data-gallery-prev aria-label="Previous ${artwork.title} view">←</button>
+      <div class="gallery-viewport ${slide.kind === "image" ? "gallery-viewport--image" : ""}" data-gallery-viewport tabindex="0">
+        ${gallerySlideMarkup(slide, artwork)}
+      </div>
+      <button class="gallery-arrow gallery-arrow--next" type="button" data-gallery-next aria-label="Next ${artwork.title} view">→</button>
+      <div class="gallery-counter" data-gallery-counter>${String(galleryIndex + 1).padStart(2, "0")} / ${String(slides.length).padStart(2, "0")}</div>
+      <div class="gallery-caption" data-gallery-caption>${slide.label || "PRIMARY FORM"}</div>
+    </div>`;
+}
+
 function renderLanding({ returning = false } = {}) {
   currentScreen = "landing";
   transitionLock = false;
@@ -370,6 +434,7 @@ function startIndexTransition() {
 function renderIndex(index = activeIndex, { arriving = false } = {}) {
   currentScreen = "index";
   activeIndex = index;
+  galleryIndex = 0;
   transitionLock = arriving;
   clearPatentTimers();
   clearKeyboardTimers();
@@ -387,10 +452,20 @@ function renderIndex(index = activeIndex, { arriving = false } = {}) {
           <div class="copy-topline"><span class="eyebrow">WORK ${artwork.number} / 04</span><span class="copy-status"><span class="status-dot"></span> PLAYING</span></div>
           <div class="title-wrap"><p class="work-kicker">${artwork.kicker}</p><h1>${artwork.title}</h1></div>
           <div class="copy-bottom"><p class="work-description">${artwork.description}</p><div class="work-meta"><span>${artwork.detail}</span><span>${artwork.year}</span></div></div>
+          <aside class="project-detail-box" aria-label="${artwork.title} project details">
+            <div class="project-detail-heading"><span class="eyebrow">PROJECT DETAILS</span><span class="project-detail-number">${artwork.number}</span></div>
+            <div class="project-detail-grid">
+              <div><span class="project-detail-label">CLIENT</span><span>${artwork.project.client}</span></div>
+              <div><span class="project-detail-label">ROLE</span><span>${artwork.project.role}</span></div>
+              <div><span class="project-detail-label">MEDIUM</span><span>${artwork.project.medium}</span></div>
+              <div><span class="project-detail-label">YEAR</span><span>${artwork.year}</span></div>
+            </div>
+            ${artwork.project.url ? `<a class="project-link" href="${artwork.project.url}" target="_blank" rel="noreferrer">VIEW PROJECT <span>↗</span></a>` : `<button class="project-link project-link--disabled" type="button" disabled>ADD PROJECT URL <span>↗</span></button>`}
+          </aside>
         </section>
         <section class="art-stage" aria-label="${artwork.title} artwork">
           <div class="stage-corner stage-corner--tl">ONE-LINE / MOTION</div><div class="stage-corner stage-corner--br">PRESS TO PLAY</div>
-          <div class="art-frame">${lineArt[artwork.variant]()}</div><div class="stage-mark" aria-hidden="true">PP<span>01—04</span></div>
+          <div class="art-frame">${galleryMarkup(artwork)}</div><div class="stage-mark" aria-hidden="true">PP<span>01—04</span></div>
         </section>
       </main>
       <footer class="key-dock">
@@ -405,6 +480,12 @@ function renderIndex(index = activeIndex, { arriving = false } = {}) {
 
   root.querySelector(".wordmark").addEventListener("click", () => renderLanding({ returning: true }));
   root.querySelector(".about-toggle").addEventListener("click", toggleAbout);
+  root.querySelector("[data-gallery-prev]")?.addEventListener("click", () => updateGallery(artwork, galleryIndex - 1));
+  root.querySelector("[data-gallery-next]")?.addEventListener("click", () => updateGallery(artwork, galleryIndex + 1));
+  root.querySelector("[data-gallery-viewport]")?.addEventListener("keydown", (event) => {
+    if (event.key === "ArrowLeft") updateGallery(artwork, galleryIndex - 1);
+    if (event.key === "ArrowRight") updateGallery(artwork, galleryIndex + 1);
+  });
   root.querySelectorAll(".piano-key").forEach((button) => {
     button.addEventListener("click", () => renderIndex(Number(button.dataset.index)));
   });
