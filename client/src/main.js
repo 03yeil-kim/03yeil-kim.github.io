@@ -48,6 +48,57 @@ const prefersReducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)
 let activeIndex = 0;
 let currentScreen = "landing";
 let transitionLock = false;
+let patentTimers = [];
+
+const patentSequence = [
+  { number: "01", x: 178, y: 365, label: "KEY BED", path: "M178 365 C205 345 225 310 252 275" },
+  { number: "02", x: 762, y: 262, label: "FRAME", path: "M762 262 C815 248 858 270 884 315" },
+  { number: "03", x: 595, y: 445, label: "SOUND BOARD", path: "M595 445 C622 410 666 379 720 353" },
+  { number: "04", x: 735, y: 582, label: "DETAIL B", path: "M735 582 C778 563 820 545 854 512" },
+  { number: "05", x: 510, y: 663, label: "SECTION A", path: "M510 663 C548 665 590 659 628 644" },
+];
+
+function clearPatentTimers() {
+  patentTimers.forEach((timer) => window.clearTimeout(timer));
+  patentTimers = [];
+}
+
+function patentOverlay() {
+  return `
+    <svg class="patent-overlay" viewBox="0 0 1000 750" preserveAspectRatio="xMidYMid meet" aria-hidden="true">
+      <g class="patent-sequence">
+        ${patentSequence.map((item, index) => `
+          <g class="patent-step" data-step="${index}">
+            <path class="patent-route" pathLength="1" d="${item.path}" />
+            <circle class="patent-node" cx="${item.x}" cy="${item.y}" r="5" />
+            <text class="patent-number" x="${item.x + 12}" y="${item.y - 10}">${item.number}</text>
+            <text class="patent-label" x="${item.x + 12}" y="${item.y + 5}">${item.label}</text>
+          </g>
+        `).join("")}
+        <circle class="patent-cursor" cx="0" cy="0" r="6" />
+      </g>
+    </svg>`;
+}
+
+function playPatentSequence() {
+  clearPatentTimers();
+  const overlay = root.querySelector(".patent-overlay");
+  if (!overlay) return;
+
+  patentSequence.forEach((item, index) => {
+    const timer = window.setTimeout(() => {
+      const step = overlay.querySelector(`[data-step="${index}"]`);
+      const cursor = overlay.querySelector(".patent-cursor");
+      if (!step) return;
+      step.classList.add("is-active");
+      cursor?.animate(
+        [{ transform: `translate(${index === 0 ? 0 : patentSequence[index - 1].x}px, ${index === 0 ? 0 : patentSequence[index - 1].y}px)` }, { transform: `translate(${item.x}px, ${item.y}px)` }],
+        { duration: prefersReducedMotion ? 1 : 620, easing: "cubic-bezier(.2,.8,.2,1)", fill: "forwards" },
+      );
+    }, prefersReducedMotion ? index * 45 : 620 + index * 760);
+    patentTimers.push(timer);
+  });
+}
 
 const lineArt = {
   piano: () => `
@@ -121,6 +172,7 @@ const lineArt = {
 function renderLanding({ returning = false } = {}) {
   currentScreen = "landing";
   transitionLock = false;
+  clearPatentTimers();
   root.innerHTML = `
     <div class="landing-shell ${returning ? "is-returning" : ""}">
       <header class="landing-topbar">
@@ -138,10 +190,13 @@ function renderLanding({ returning = false } = {}) {
         <section class="landing-art" aria-label="Kim Yeil piano keyboard one-line signature artwork">
           <div class="landing-art-label landing-art-label--top">PATENT STUDY / GRAND PIANO</div>
           <div class="landing-art-label landing-art-label--side">STRUCTURAL INDEX / 01—04</div>
-          <picture>
-            <source srcset="/assets/kim-yeil-piano-patent.webp" type="image/webp" />
-            <img class="landing-art-image" src="/assets/kim-yeil-piano-patent.png" alt="Grand piano patent drawing with keyboard, internal strings, structural callouts, and section details" />
-          </picture>
+          <div class="patent-plate">
+            <picture>
+              <source srcset="/assets/kim-yeil-piano-patent.webp" type="image/webp" />
+              <img class="landing-art-image" src="/assets/kim-yeil-piano-patent.png" alt="Grand piano patent drawing with keyboard, internal strings, structural callouts, and section details" />
+            </picture>
+            ${patentOverlay()}
+          </div>
           <div class="landing-art-caption">DRAWING 01 <span>PLATE A</span></div>
         </section>
       </main>
@@ -153,11 +208,13 @@ function renderLanding({ returning = false } = {}) {
     </div>`;
 
   root.querySelector(".enter-index").addEventListener("click", startIndexTransition);
+  window.setTimeout(playPatentSequence, returning ? 120 : 420);
 }
 
 function startIndexTransition() {
   if (transitionLock || currentScreen !== "landing") return;
   transitionLock = true;
+  clearPatentTimers();
   root.querySelector(".landing-shell")?.classList.add("is-pressing");
   root.insertAdjacentHTML("beforeend", `<div class="route-transition" aria-hidden="true"><span class="route-transition__line"></span><span class="route-transition__label">PRESS / PLAY</span></div>`);
   window.setTimeout(() => renderIndex(0, { arriving: true }), prefersReducedMotion ? 40 : 560);
@@ -167,6 +224,7 @@ function renderIndex(index = activeIndex, { arriving = false } = {}) {
   currentScreen = "index";
   activeIndex = index;
   transitionLock = arriving;
+  clearPatentTimers();
   const artwork = artworks[activeIndex];
   root.innerHTML = `
     <div class="press-play-shell ${arriving ? "is-arriving" : ""}">
