@@ -76,8 +76,9 @@ function setPatentCamera(index = null, { instant = false } = {}) {
   const artwork = root.querySelector(".patent-artwork");
   if (!plate || !artwork) return;
 
+  const restingShiftX = plate.clientWidth * 0.02;
   if (index === null) {
-    artwork.style.transform = "translate3d(0, 0, 0) scale(1)";
+    artwork.style.transform = `translate3d(${restingShiftX}px, 0, 0) scale(1)`;
     plate.classList.remove("is-focused");
     return;
   }
@@ -88,7 +89,7 @@ function setPatentCamera(index = null, { instant = false } = {}) {
   const height = plate.clientHeight;
   const focusX = (point.x / 1000) * width;
   const focusY = (point.y / 750) * height;
-  const moveX = width / 2 - focusX * point.zoom;
+  const moveX = width / 2 - focusX * point.zoom + restingShiftX;
   const moveY = height / 2 - focusY * point.zoom;
   artwork.style.transitionDuration = instant || prefersReducedMotion ? "1ms" : "980ms";
   artwork.style.transform = `translate3d(${moveX}px, ${moveY}px, 0) scale(${point.zoom})`;
