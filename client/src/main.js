@@ -414,7 +414,7 @@ function renderIndex(index = activeIndex, { arriving = false } = {}) {
               <div><span class="project-detail-label">YEAR</span><span>${artwork.year}</span></div>
             </div>
             <div class="project-focus-list">${artwork.project.focus.map((item) => `<span>${item}</span>`).join("")}</div>
-            ${artwork.project.url ? `<a class="project-link" href="${artwork.project.url}" target="_blank" rel="noreferrer">VIEW PROJECT <span>↗</span></a>` : `<button class="project-link project-link--disabled" type="button" disabled>ADD PROJECT URL <span>↗</span></button>`}
+            <button class="project-link" type="button" data-project-detail>PROJECT DETAIL <span>↗</span></button>
           </aside>
         </section>
         <section class="art-stage" aria-label="${artwork.title} artwork">
@@ -434,6 +434,7 @@ function renderIndex(index = activeIndex, { arriving = false } = {}) {
 
   root.querySelector(".wordmark").addEventListener("click", () => renderLanding({ returning: true }));
   root.querySelector(".about-toggle").addEventListener("click", toggleAbout);
+  root.querySelector("[data-project-detail]")?.addEventListener("click", openProjectDetail);
   root.querySelectorAll(".piano-key").forEach((button) => {
     button.addEventListener("click", () => renderIndex(Number(button.dataset.index)));
   });
@@ -443,6 +444,62 @@ function renderIndex(index = activeIndex, { arriving = false } = {}) {
     transitionLock = false;
     root.querySelector(".route-transition--reveal")?.remove();
   }, arriving ? (prefersReducedMotion ? 80 : 780) : (prefersReducedMotion ? 60 : 260));
+}
+
+function openProjectDetail() {
+  if (root.querySelector(".project-detail-overlay")) return;
+  const artwork = artworks[activeIndex];
+  const firstSlide = artwork.gallery?.[0] || { kind: "placeholder", label: "ARTWORK IMAGE TO BE ADDED" };
+  const visual = gallerySlideMarkup(firstSlide, artwork);
+  const overlay = document.createElement("div");
+  overlay.className = "project-detail-overlay";
+  overlay.setAttribute("role", "dialog");
+  overlay.setAttribute("aria-modal", "true");
+  overlay.setAttribute("aria-label", `${artwork.shortTitle} project details`);
+  overlay.innerHTML = `
+    <div class="project-detail-panel">
+      <button class="project-detail-close" type="button" aria-label="Close project detail">CLOSE <span>×</span></button>
+      <div class="project-detail-heading">
+        <p class="eyebrow">PROJECT ${artwork.number} / 04 · ${artwork.detail}</p>
+        <h2>${artwork.title}</h2>
+        <p class="project-detail-kicker">${artwork.kicker}</p>
+      </div>
+      <div class="project-detail-visual">${visual}</div>
+      <div class="project-detail-content">
+        <section class="project-detail-section project-detail-section--wide">
+          <p class="eyebrow">OVERVIEW</p>
+          <h3>작은 흐름을 더 나은 경험으로.</h3>
+          <p>${artwork.project.overview}</p>
+        </section>
+        <section class="project-detail-section">
+          <p class="eyebrow">DESIGN FOCUS</p>
+          <div class="project-focus-list">${artwork.project.focus.map((item) => `<span>${item}</span>`).join("")}</div>
+        </section>
+        <section class="project-detail-section">
+          <p class="eyebrow">ROLE / MEDIUM</p>
+          <p>${artwork.project.role} · ${artwork.project.medium}</p>
+        </section>
+      </div>
+      <footer class="project-detail-footer"><span>KIM YEIL / SELECTED WORKS</span><span>${artwork.year}</span></footer>
+    </div>`;
+  root.appendChild(overlay);
+  document.body.classList.add("project-detail-open");
+  const closeButton = overlay.querySelector(".project-detail-close");
+  const close = () => {
+    overlay.remove();
+    document.body.classList.remove("project-detail-open");
+    document.removeEventListener("keydown", onKeydown);
+    root.querySelector("[data-project-detail]")?.focus();
+  };
+  const onKeydown = (event) => {
+    if (event.key === "Escape") close();
+  };
+  closeButton.addEventListener("click", close);
+  overlay.addEventListener("click", (event) => {
+    if (event.target === overlay) close();
+  });
+  document.addEventListener("keydown", onKeydown);
+  closeButton.focus();
 }
 
 function toggleAbout() {
