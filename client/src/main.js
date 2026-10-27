@@ -49,6 +49,7 @@ let activeIndex = 0;
 let currentScreen = "landing";
 let transitionLock = false;
 let patentTimers = [];
+let keyboardTimers = [];
 
 const patentSequence = [
   { number: "01", x: 178, y: 365, label: "KEY BED", path: "M178 365 C205 345 225 310 252 275" },
@@ -66,9 +67,60 @@ const patentFocus = [
   { x: 510, y: 663, zoom: 1.16 },
 ];
 
+const keyboardPhrases = [
+  [2, 5, 8, 5],
+  [9, 7, 10, 12],
+  [4, 6, 9, 11],
+  [12, 10, 7, 5],
+  [3, 6, 8, 11],
+];
+
+const keyboardRhythm = [0, 150, 325, 515];
+
 function clearPatentTimers() {
   patentTimers.forEach((timer) => window.clearTimeout(timer));
   patentTimers = [];
+}
+
+function clearKeyboardTimers() {
+  keyboardTimers.forEach((timer) => window.clearTimeout(timer));
+  keyboardTimers = [];
+  root.querySelectorAll(".keyboard-key.is-playing").forEach((key) => key.classList.remove("is-playing"));
+}
+
+function keyboardOverlay() {
+  const keyCount = 18;
+  const startY = 108;
+  const keyHeight = 32;
+  return `
+    <svg class="keyboard-overlay" viewBox="0 0 1000 750" preserveAspectRatio="xMidYMid meet" aria-hidden="true">
+      <g class="keyboard-sequence">
+        ${Array.from({ length: keyCount }, (_, index) => `
+          <rect class="keyboard-key" data-key="${index}" x="132" y="${startY + index * keyHeight}" width="82" height="${keyHeight - 2}" rx="1" />
+        `).join("")}
+        <path class="keyboard-spine" d="M216 108V684" />
+      </g>
+    </svg>`;
+}
+
+function playKeyboardPhrase(phraseIndex = 0) {
+  clearKeyboardTimers();
+  const overlay = root.querySelector(".keyboard-overlay");
+  if (!overlay) return;
+  const phrase = keyboardPhrases[phraseIndex] || keyboardPhrases[0];
+
+  phrase.forEach((keyIndex, noteIndex) => {
+    const timer = window.setTimeout(() => {
+      const key = overlay.querySelector(`[data-key="${keyIndex}"]`);
+      if (!key) return;
+      key.classList.remove("is-playing");
+      void key.getBoundingClientRect();
+      key.classList.add("is-playing");
+      const releaseTimer = window.setTimeout(() => key.classList.remove("is-playing"), prefersReducedMotion ? 1 : 265);
+      keyboardTimers.push(releaseTimer);
+    }, prefersReducedMotion ? noteIndex * 30 : keyboardRhythm[noteIndex]);
+    keyboardTimers.push(timer);
+  });
 }
 
 function setPatentCamera(index = null, { instant = false } = {}) {
@@ -98,6 +150,7 @@ function setPatentCamera(index = null, { instant = false } = {}) {
 
 function focusPatentStep(index) {
   clearPatentTimers();
+  playKeyboardPhrase(index);
   const overlay = root.querySelector(".patent-overlay");
   if (!overlay || !patentSequence[index]) return;
   overlay.querySelectorAll(".patent-step").forEach((step, stepIndex) => {
@@ -128,6 +181,7 @@ function patentOverlay() {
 
 function playPatentSequence() {
   clearPatentTimers();
+  clearKeyboardTimers();
   const overlay = root.querySelector(".patent-overlay");
   if (!overlay) return;
 
@@ -141,6 +195,7 @@ function playPatentSequence() {
       if (!step) return;
       step.classList.add("is-active");
       setPatentCamera(index);
+      playKeyboardPhrase(index);
       cursor?.animate(
         [{ transform: `translate(${index === 0 ? 0 : patentSequence[index - 1].x}px, ${index === 0 ? 0 : patentSequence[index - 1].y}px)` }, { transform: `translate(${item.x}px, ${item.y}px)` }],
         { duration: prefersReducedMotion ? 1 : 620, easing: "cubic-bezier(.2,.8,.2,1)", fill: "forwards" },
@@ -229,6 +284,7 @@ function renderLanding({ returning = false } = {}) {
   currentScreen = "landing";
   transitionLock = false;
   clearPatentTimers();
+  clearKeyboardTimers();
   root.innerHTML = `
     <div class="landing-shell ${returning ? "is-returning" : ""}">
       <header class="landing-topbar">
@@ -252,6 +308,7 @@ function renderLanding({ returning = false } = {}) {
                 <source srcset="/assets/kim-yeil-piano-cutout.webp" type="image/webp" />
                 <img class="landing-art-image" src="/assets/kim-yeil-piano-cutout.png" alt="Transparent grand piano technical drawing with keyboard, internal strings, and structural callouts" />
               </picture>
+              ${keyboardOverlay()}
               ${patentOverlay()}
             </div>
           </div>
@@ -283,6 +340,7 @@ function startIndexTransition() {
   if (transitionLock || currentScreen !== "landing") return;
   transitionLock = true;
   clearPatentTimers();
+  clearKeyboardTimers();
   root.querySelector(".landing-shell")?.classList.add("is-pressing");
   root.insertAdjacentHTML("beforeend", `<div class="route-transition" aria-hidden="true"><span class="route-transition__line"></span><span class="route-transition__label">PRESS / PLAY</span></div>`);
   window.setTimeout(() => renderIndex(0, { arriving: true }), prefersReducedMotion ? 40 : 560);
@@ -293,6 +351,7 @@ function renderIndex(index = activeIndex, { arriving = false } = {}) {
   activeIndex = index;
   transitionLock = arriving;
   clearPatentTimers();
+  clearKeyboardTimers();
   const artwork = artworks[activeIndex];
   root.innerHTML = `
     <div class="press-play-shell ${arriving ? "is-arriving" : ""}">
