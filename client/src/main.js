@@ -58,17 +58,62 @@ const patentSequence = [
   { number: "05", x: 510, y: 663, label: "SECTION A", path: "M510 663 C548 665 590 659 628 644" },
 ];
 
+const patentFocus = [
+  { x: 178, y: 365, zoom: 1.16 },
+  { x: 762, y: 262, zoom: 1.2 },
+  { x: 595, y: 445, zoom: 1.22 },
+  { x: 735, y: 582, zoom: 1.28 },
+  { x: 510, y: 663, zoom: 1.16 },
+];
+
 function clearPatentTimers() {
   patentTimers.forEach((timer) => window.clearTimeout(timer));
   patentTimers = [];
 }
 
+function setPatentCamera(index = null, { instant = false } = {}) {
+  const plate = root.querySelector(".patent-plate");
+  const artwork = root.querySelector(".patent-artwork");
+  if (!plate || !artwork) return;
+
+  if (index === null) {
+    artwork.style.transform = "translate3d(0, 0, 0) scale(1)";
+    plate.classList.remove("is-focused");
+    return;
+  }
+
+  const point = patentFocus[index];
+  if (!point) return;
+  const width = plate.clientWidth;
+  const height = plate.clientHeight;
+  const focusX = (point.x / 1000) * width;
+  const focusY = (point.y / 750) * height;
+  const moveX = width / 2 - focusX * point.zoom;
+  const moveY = height / 2 - focusY * point.zoom;
+  artwork.style.transitionDuration = instant || prefersReducedMotion ? "1ms" : "980ms";
+  artwork.style.transform = `translate3d(${moveX}px, ${moveY}px, 0) scale(${point.zoom})`;
+  plate.classList.add("is-focused");
+}
+
+function focusPatentStep(index) {
+  clearPatentTimers();
+  const overlay = root.querySelector(".patent-overlay");
+  if (!overlay || !patentSequence[index]) return;
+  overlay.querySelectorAll(".patent-step").forEach((step, stepIndex) => {
+    step.classList.toggle("is-active", stepIndex <= index);
+  });
+  const cursor = overlay.querySelector(".patent-cursor");
+  const point = patentSequence[index];
+  cursor?.setAttribute("transform", `translate(${point.x} ${point.y})`);
+  setPatentCamera(index);
+}
+
 function patentOverlay() {
   return `
-    <svg class="patent-overlay" viewBox="0 0 1000 750" preserveAspectRatio="xMidYMid meet" aria-hidden="true">
+    <svg class="patent-overlay" viewBox="0 0 1000 750" preserveAspectRatio="xMidYMid meet" role="group" aria-label="Patent drawing focus points">
       <g class="patent-sequence">
         ${patentSequence.map((item, index) => `
-          <g class="patent-step" data-step="${index}">
+          <g class="patent-step" data-step="${index}" role="button" tabindex="0" aria-label="Focus ${item.label}">
             <path class="patent-route" pathLength="1" d="${item.path}" />
             <circle class="patent-node" cx="${item.x}" cy="${item.y}" r="5" />
             <text class="patent-number" x="${item.x + 12}" y="${item.y - 10}">${item.number}</text>
@@ -85,12 +130,16 @@ function playPatentSequence() {
   const overlay = root.querySelector(".patent-overlay");
   if (!overlay) return;
 
+  setPatentCamera(null, { instant: true });
+  overlay.querySelectorAll(".patent-step").forEach((step) => step.classList.remove("is-active"));
+
   patentSequence.forEach((item, index) => {
     const timer = window.setTimeout(() => {
       const step = overlay.querySelector(`[data-step="${index}"]`);
       const cursor = overlay.querySelector(".patent-cursor");
       if (!step) return;
       step.classList.add("is-active");
+      setPatentCamera(index);
       cursor?.animate(
         [{ transform: `translate(${index === 0 ? 0 : patentSequence[index - 1].x}px, ${index === 0 ? 0 : patentSequence[index - 1].y}px)` }, { transform: `translate(${item.x}px, ${item.y}px)` }],
         { duration: prefersReducedMotion ? 1 : 620, easing: "cubic-bezier(.2,.8,.2,1)", fill: "forwards" },
@@ -98,6 +147,12 @@ function playPatentSequence() {
     }, prefersReducedMotion ? index * 45 : 620 + index * 760);
     patentTimers.push(timer);
   });
+
+  const resetTimer = window.setTimeout(() => {
+    setPatentCamera(null);
+    overlay.querySelectorAll(".patent-step").forEach((step) => step.classList.remove("is-active"));
+  }, prefersReducedMotion ? 260 : 5300);
+  patentTimers.push(resetTimer);
 }
 
 const lineArt = {
@@ -191,11 +246,13 @@ function renderLanding({ returning = false } = {}) {
           <div class="landing-art-label landing-art-label--top">PATENT STUDY / GRAND PIANO</div>
           <div class="landing-art-label landing-art-label--side">STRUCTURAL INDEX / 01—04</div>
           <div class="patent-plate">
-            <picture>
-              <source srcset="/assets/kim-yeil-piano-patent.webp" type="image/webp" />
-              <img class="landing-art-image" src="/assets/kim-yeil-piano-patent.png" alt="Grand piano patent drawing with keyboard, internal strings, structural callouts, and section details" />
-            </picture>
-            ${patentOverlay()}
+            <div class="patent-artwork">
+              <picture>
+                <source srcset="/assets/kim-yeil-piano-patent.webp" type="image/webp" />
+                <img class="landing-art-image" src="/assets/kim-yeil-piano-patent.png" alt="Grand piano patent drawing with keyboard, internal strings, structural callouts, and section details" />
+              </picture>
+              ${patentOverlay()}
+            </div>
           </div>
           <div class="landing-art-caption">DRAWING 01 <span>PLATE A</span></div>
         </section>
@@ -208,6 +265,16 @@ function renderLanding({ returning = false } = {}) {
     </div>`;
 
   root.querySelector(".enter-index").addEventListener("click", startIndexTransition);
+  root.querySelectorAll(".patent-step").forEach((step) => {
+    const focus = () => focusPatentStep(Number(step.dataset.step));
+    step.addEventListener("click", focus);
+    step.addEventListener("keydown", (event) => {
+      if (event.key === "Enter" || event.key === " ") {
+        event.preventDefault();
+        focus();
+      }
+    });
+  });
   window.setTimeout(playPatentSequence, returning ? 120 : 420);
 }
 
@@ -287,6 +354,8 @@ window.addEventListener("keydown", (event) => {
   if (transitionLock) return;
   if (currentScreen === "landing") {
     if (event.key === "Enter" || event.key === " ") startIndexTransition();
+    const focusIndex = Number(event.key) - 1;
+    if (focusIndex >= 0 && focusIndex < 4) focusPatentStep(focusIndex);
     return;
   }
   if (event.repeat) return;
