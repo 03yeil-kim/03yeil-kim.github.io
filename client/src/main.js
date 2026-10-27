@@ -52,11 +52,36 @@ let transitionLock = false;
 const lineArt = {
   piano: () => `
     <svg class="line-art line-art--piano" viewBox="0 0 560 480" role="img" aria-label="Piano keyboard one-line artwork">
-      <path class="art-stroke art-stroke--main" pathLength="1" d="M105 159h346v181H105z" />
-      <path class="art-stroke art-stroke--secondary" pathLength="1" d="M105 159l36-29h345l-35 29m35-29v181l-35 29" />
-      <path class="art-stroke art-stroke--fine" pathLength="1" d="M155 159v181m50-181v181m50-181v181m50-181v181m50-181v181m50-181v181m50-181v181" />
-      <path class="art-stroke art-stroke--main" pathLength="1" d="M146 159v58h25v-58m35 0v58h25v-58m85 0v58h25v-58m35 0v58h25v-58m35 0v58h25v-58" />
-      <path class="art-stroke art-stroke--fine" pathLength="1" d="M70 228c24-39 52-57 84-55m-84 55c-12 18-18 37-18 57 0 61 49 111 110 111" />
+      <g class="diagram-grid" aria-hidden="true">
+        <path d="M66 101h410M66 379h410M82 88v308M464 88v308" />
+        <path d="M78 119h10m-10 18h10m366-18h10m-10 18h10" />
+      </g>
+      <g class="diagram-piano" pathLength="1">
+        <path class="art-stroke art-stroke--main" d="M120 159h71c18-31 52-49 104-49 75 0 146 32 171 84 20 41 18 91-7 128-24 36-67 55-119 55H120z" />
+        <path class="art-stroke art-stroke--secondary" d="M120 159v218m0-218 29-27h60m-60 27v218m60-218v218m0-218c20-22 46-35 79-39m-79 257h177c53 0 92-17 113-49" />
+        <path class="art-stroke art-stroke--fine" d="M209 172h85c72 0 127 22 166 66m-251-49h82c65 0 123 24 165 70m-247-45h77c65 0 122 25 156 69m-233-45h68c53 0 104 21 132 52" />
+        <path class="art-stroke art-stroke--fine" d="M319 113c-10 36-9 72 2 108m24-101c-8 34-6 67 5 98m24-87c-6 32-3 60 8 86m22-72c-2 27 3 50 14 72m20-54c3 20 10 37 21 52" />
+        <path class="art-stroke art-stroke--main" d="M120 159h71v34h25v-34h25v34h25v-34h25v34h25v-34h25v34h25v-34h25v34h25v-34h25v34h25v-34h25v34h25" />
+        <path class="art-stroke art-stroke--secondary" d="M120 377h203c62 0 108-21 127-60 18-37 16-80-5-115-28-47-86-72-162-72H191" />
+      </g>
+      <g class="diagram-inset" aria-hidden="true">
+        <rect class="art-stroke art-stroke--fine" x="103" y="399" width="105" height="42" />
+        <path class="art-stroke art-stroke--fine" d="M115 414h81m-81 12h81m-61-12v12m20-12v12m20-12v12" />
+        <rect class="art-stroke art-stroke--fine" x="356" y="399" width="92" height="42" />
+        <circle class="art-stroke art-stroke--fine" cx="402" cy="420" r="13" />
+        <path class="art-stroke art-stroke--fine" d="M402 407v26m-13-13h26" />
+      </g>
+      <g class="diagram-labels" aria-hidden="true">
+        <text x="91" y="73">PLATE 01 / GRAND PIANO</text>
+        <text x="96" y="151">KEY BED</text>
+        <text x="337" y="101">SOUND BOARD</text>
+        <text x="421" y="228">FRAME</text>
+        <text x="111" y="465">DETAIL A</text>
+        <text x="365" y="465">DETAIL B</text>
+        <text class="diagram-number" x="83" y="176">01</text>
+        <text class="diagram-number" x="462" y="263">02</text>
+        <text class="diagram-number" x="316" y="386">03</text>
+      </g>
       <circle class="art-dot art-dot--large" cx="462" cy="114" r="7" />
     </svg>`,
   contour: () => `
@@ -111,10 +136,10 @@ function renderLanding({ returning = false } = {}) {
           <p class="landing-description">Kim Yeil works across identity, objects, and moving images — finding the line between a precise idea and the feeling it leaves behind.</p>
         </section>
         <section class="landing-art" aria-label="Kim Yeil piano keyboard one-line signature artwork">
-          <div class="landing-art-label landing-art-label--top">A LINE IS A BEGINNING</div>
-          <div class="landing-art-label landing-art-label--side">SELECTED PRACTICE / 2025—26</div>
+          <div class="landing-art-label landing-art-label--top">PATENT STUDY / GRAND PIANO</div>
+          <div class="landing-art-label landing-art-label--side">STRUCTURAL INDEX / 01—04</div>
           ${lineArt.piano()}
-          <div class="landing-art-caption">PIANO STUDY <span>01</span></div>
+          <div class="landing-art-caption">DRAWING 01 <span>PLATE A</span></div>
         </section>
       </main>
       <footer class="landing-footer">
