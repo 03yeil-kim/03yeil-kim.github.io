@@ -50,6 +50,7 @@ let currentScreen = "landing";
 let transitionLock = false;
 let patentTimers = [];
 let keyboardTimers = [];
+let keyboardLoopTimer = null;
 
 const patentSequence = [
   { number: "01", x: 178, y: 365, label: "KEY BED", path: "M178 365 C205 345 225 310 252 275" },
@@ -85,6 +86,10 @@ function clearPatentTimers() {
 function clearKeyboardTimers() {
   keyboardTimers.forEach((timer) => window.clearTimeout(timer));
   keyboardTimers = [];
+  if (keyboardLoopTimer) {
+    window.clearTimeout(keyboardLoopTimer);
+    keyboardLoopTimer = null;
+  }
   root.querySelectorAll(".keyboard-key.is-playing").forEach((key) => key.classList.remove("is-playing"));
 }
 
@@ -103,8 +108,9 @@ function keyboardOverlay() {
     </svg>`;
 }
 
-function playKeyboardPhrase(phraseIndex = 0) {
-  clearKeyboardTimers();
+function playKeyboardPhrase(phraseIndex = 0, { preserveLoop = false } = {}) {
+  if (!preserveLoop) clearKeyboardTimers();
+  else keyboardTimers = [];
   const overlay = root.querySelector(".keyboard-overlay");
   if (!overlay) return;
   const phrase = keyboardPhrases[phraseIndex] || keyboardPhrases[0];
@@ -121,6 +127,20 @@ function playKeyboardPhrase(phraseIndex = 0) {
     }, prefersReducedMotion ? noteIndex * 30 : keyboardRhythm[noteIndex]);
     keyboardTimers.push(timer);
   });
+}
+
+function startKeyboardLoop() {
+  clearKeyboardTimers();
+  let phraseIndex = 0;
+
+  const playNextPhrase = () => {
+    if (currentScreen !== "landing" || !root.querySelector(".keyboard-overlay")) return;
+    playKeyboardPhrase(phraseIndex, { preserveLoop: true });
+    phraseIndex = (phraseIndex + 1) % keyboardPhrases.length;
+    keyboardLoopTimer = window.setTimeout(playNextPhrase, prefersReducedMotion ? 900 : 1850);
+  };
+
+  playNextPhrase();
 }
 
 function setPatentCamera(index = null, { instant = false } = {}) {
@@ -207,6 +227,7 @@ function playPatentSequence() {
   const resetTimer = window.setTimeout(() => {
     setPatentCamera(null);
     overlay.querySelectorAll(".patent-step").forEach((step) => step.classList.remove("is-active"));
+    startKeyboardLoop();
   }, prefersReducedMotion ? 260 : 6000);
   patentTimers.push(resetTimer);
 }
