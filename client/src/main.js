@@ -8,7 +8,6 @@ const artworks = [
     detail: "UI/UX DESIGN · WEB + MOBILE", year: "2026", variant: "contour",
     gallery: [
       { kind: "image", src: "/assets/culturepass_detail_page_logo_preserved.png", alt: "경기컬처패스 웹과 모바일 리디자인 화면", label: "PROJECT OVERVIEW" },
-      { kind: "line", variant: "contour", label: "LINE STUDY" },
     ],
     project: { client: "경기컬처패스", role: "UI/UX Design", medium: "Web + Mobile", url: "", overview: "컬처패스의 주요 화면을 웹과 모바일로 확장한 인터랙티브 데모입니다. 사용자가 문화 혜택을 탐색하고 쿠폰 상세를 확인한 뒤 제휴사로 이동하는 흐름을 한눈에 이해하도록 구성했습니다.", focus: ["혜택 탐색", "쿠폰 상세", "번호 복사", "반응형 화면"] },
   },
@@ -19,7 +18,6 @@ const artworks = [
     detail: "APP UX/UI · CONTENT DISCOVERY", year: "2026", variant: "orbit",
     gallery: [
       { kind: "image", src: "/assets/bite-portfolio-overview.png", alt: "BITE 콘텐츠 추천 앱의 홈, 재생, 취향 화면", label: "PROJECT OVERVIEW" },
-      { kind: "line", variant: "orbit", label: "MOTION STUDY" },
     ],
     project: { client: "BITE", role: "UX/UI Design", medium: "Content Discovery App", url: "", overview: "BITE는 사용자가 설정한 식사·이동 시간과 상황에 맞춰 부담 없이 볼 수 있는 영상 콘텐츠를 제안하는 앱 콘셉트입니다. 추천 이유와 예상 시청 시간을 함께 보여줍니다.", focus: ["시간 기반 추천", "식사·이동 상황", "취향 설정", "저장 콘텐츠"] },
   },
@@ -29,8 +27,7 @@ const artworks = [
     description: "타이포그래피와 이미지의 관계를 실험하는 그래픽 디자인 프로젝트입니다. 실제 포스터 이미지는 준비되는 대로 연결할 수 있습니다.",
     detail: "GRAPHIC DESIGN · POSTER", year: "2026", variant: "ripple",
     gallery: [
-      { kind: "line", variant: "ripple", label: "PLACEHOLDER / POSTER" },
-      { kind: "line", variant: "contour", label: "TYPE STUDY" },
+      { kind: "placeholder", label: "POSTER IMAGE TO BE ADDED" },
     ],
     project: { client: "Independent Project", role: "Graphic Design", medium: "Typography / Poster", url: "", overview: "포스터 원본 이미지가 추가되면 기획 의도와 최종 결과물을 실제 작업 내용에 맞춰 업데이트합니다.", focus: ["타이포그래피", "컬러 시스템", "레이아웃", "시각적 콘셉트"] },
   },
@@ -41,7 +38,6 @@ const artworks = [
     detail: "WEB DESIGN · INTERACTION · RESPONSIVE", year: "2026", variant: "bloom",
     gallery: [
       { kind: "image", src: "/assets/STILL-portfolio-overview.png", alt: "STILL 비주얼 저널의 데스크톱과 모바일 반응형 랜딩페이지", label: "PROJECT OVERVIEW" },
-      { kind: "line", variant: "bloom", label: "SEQUENCE STUDY" },
     ],
     project: { client: "STILL", role: "Web Design / Interaction", medium: "Responsive Web", url: "", overview: "STILL은 익숙한 장면을 새로운 시선으로 바라보게 하는 비주얼 저널 웹사이트 콘셉트입니다. 큰 제목과 넉넉한 여백, 이미지 시퀀스로 편집적인 인상을 만들었습니다.", focus: ["비주얼 저널", "순차 등장 애니메이션", "스크롤 인터랙션", "반응형 웹"] },
   },
@@ -50,7 +46,6 @@ const artworks = [
 const root = document.getElementById("root");
 const prefersReducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 let activeIndex = 0;
-let galleryIndex = 0;
 let currentScreen = "landing";
 let transitionLock = false;
 let patentTimers = [];
@@ -310,38 +305,16 @@ function gallerySlideMarkup(slide, artwork) {
   if (slide.kind === "image") {
     return `<img class="artwork-photo" src="${slide.src}" alt="${slide.alt || `${artwork.title} image`}" loading="lazy" />`;
   }
-  return lineArt[slide.variant || artwork.variant]();
-}
-
-function updateGallery(artwork, nextIndex) {
-  const slides = artwork.gallery || [{ kind: "line", variant: artwork.variant, label: "PRIMARY FORM" }];
-  galleryIndex = (nextIndex + slides.length) % slides.length;
-  const slide = slides[galleryIndex];
-  const viewport = root.querySelector("[data-gallery-viewport]");
-  const counter = root.querySelector("[data-gallery-counter]");
-  const caption = root.querySelector("[data-gallery-caption]");
-  if (!viewport || !counter || !caption) return;
-  viewport.classList.add("is-changing");
-  window.setTimeout(() => {
-    viewport.innerHTML = gallerySlideMarkup(slide, artwork);
-    viewport.classList.remove("is-changing");
-    counter.textContent = `${String(galleryIndex + 1).padStart(2, "0")} / ${String(slides.length).padStart(2, "0")}`;
-    caption.textContent = slide.label || `VIEW ${String(galleryIndex + 1).padStart(2, "0")}`;
-  }, prefersReducedMotion ? 1 : 160);
+  return `<div class="project-image-placeholder"><span class="placeholder-index">PROJECT ${artwork.number}</span><strong>${artwork.shortTitle}</strong><span>${slide.label || "ARTWORK IMAGE TO BE ADDED"}</span><div class="placeholder-line"></div></div>`;
 }
 
 function galleryMarkup(artwork) {
-  const slides = artwork.gallery || [{ kind: "line", variant: artwork.variant, label: "PRIMARY FORM" }];
-  const slide = slides[galleryIndex] || slides[0];
+  const slide = (artwork.gallery || [])[0] || { kind: "placeholder", label: "ARTWORK IMAGE TO BE ADDED" };
   return `
     <div class="artwork-gallery" aria-label="${artwork.title} image gallery">
-      <button class="gallery-arrow gallery-arrow--prev" type="button" data-gallery-prev aria-label="Previous ${artwork.title} view">←</button>
-      <div class="gallery-viewport ${slide.kind === "image" ? "gallery-viewport--image" : ""}" data-gallery-viewport tabindex="0">
+      <div class="gallery-viewport ${slide.kind === "image" ? "gallery-viewport--image" : "gallery-viewport--placeholder"}">
         ${gallerySlideMarkup(slide, artwork)}
       </div>
-      <button class="gallery-arrow gallery-arrow--next" type="button" data-gallery-next aria-label="Next ${artwork.title} view">→</button>
-      <div class="gallery-counter" data-gallery-counter>${String(galleryIndex + 1).padStart(2, "0")} / ${String(slides.length).padStart(2, "0")}</div>
-      <div class="gallery-caption" data-gallery-caption>${slide.label || "PRIMARY FORM"}</div>
     </div>`;
 }
 
@@ -414,7 +387,6 @@ function startIndexTransition() {
 function renderIndex(index = activeIndex, { arriving = false } = {}) {
   currentScreen = "index";
   activeIndex = index;
-  galleryIndex = 0;
   transitionLock = arriving;
   clearPatentTimers();
   clearKeyboardTimers();
@@ -462,12 +434,6 @@ function renderIndex(index = activeIndex, { arriving = false } = {}) {
 
   root.querySelector(".wordmark").addEventListener("click", () => renderLanding({ returning: true }));
   root.querySelector(".about-toggle").addEventListener("click", toggleAbout);
-  root.querySelector("[data-gallery-prev]")?.addEventListener("click", () => updateGallery(artwork, galleryIndex - 1));
-  root.querySelector("[data-gallery-next]")?.addEventListener("click", () => updateGallery(artwork, galleryIndex + 1));
-  root.querySelector("[data-gallery-viewport]")?.addEventListener("keydown", (event) => {
-    if (event.key === "ArrowLeft") updateGallery(artwork, galleryIndex - 1);
-    if (event.key === "ArrowRight") updateGallery(artwork, galleryIndex + 1);
-  });
   root.querySelectorAll(".piano-key").forEach((button) => {
     button.addEventListener("click", () => renderIndex(Number(button.dataset.index)));
   });
