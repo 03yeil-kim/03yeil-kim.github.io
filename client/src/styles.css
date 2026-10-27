@@ -1055,6 +1055,14 @@
     letter-spacing: 0.14em;
   }
 
+  .project-detail-summary {
+    margin: 0 0 15px;
+    color: var(--muted-foreground);
+    font-family: Georgia, "Times New Roman", serif;
+    font-size: 12px;
+    line-height: 1.55;
+  }
+
   .project-detail-grid {
     display: grid;
     grid-template-columns: repeat(2, minmax(0, 1fr));
@@ -1073,6 +1081,21 @@
     color: var(--accent);
     font-size: 7px;
     letter-spacing: 0.16em;
+  }
+
+  .project-focus-list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 5px;
+    margin-top: 14px;
+  }
+
+  .project-focus-list span {
+    border: 1px solid rgba(16, 42, 67, 0.32);
+    padding: 5px 7px;
+    color: var(--muted-foreground);
+    font-size: 8px;
+    letter-spacing: 0.04em;
   }
 
   .project-link {

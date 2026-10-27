@@ -2,68 +2,48 @@ import "./styles.css";
 
 const artworks = [
   {
-    key: "1",
-    number: "01",
-    title: "Contour",
-    kicker: "A study in stillness",
-    description: "A single gesture holds the room. Contour follows the quiet architecture of a face before it becomes a portrait.",
-    detail: "INK / DIGITAL LINE",
-    year: "2026",
-    variant: "contour",
+    key: "1", number: "01", title: "Culture Pass", shortTitle: "경기컬처패스 리디자인",
+    kicker: "Culture in your everyday.",
+    description: "좋아하는 문화를 더 가까이, 더 편리하게. 문화 혜택 탐색부터 쿠폰 사용까지 이어지는 웹·모바일 경험을 설계했습니다.",
+    detail: "UI/UX DESIGN · WEB + MOBILE", year: "2026", variant: "contour",
     gallery: [
-      { kind: "line", variant: "contour", label: "PRIMARY FORM" },
-      { kind: "line", variant: "piano", label: "STRUCTURE STUDY" },
-      { kind: "line", variant: "contour", label: "DETAIL / 01" },
+      { kind: "image", src: "/assets/culturepass_detail_page_logo_preserved.png", alt: "경기컬처패스 웹과 모바일 리디자인 화면", label: "PROJECT OVERVIEW" },
+      { kind: "line", variant: "contour", label: "LINE STUDY" },
     ],
-    project: { client: "Independent Study", role: "Art Direction / Visual Design", medium: "Digital Line / Identity", url: "" },
+    project: { client: "경기컬처패스", role: "UI/UX Design", medium: "Web + Mobile", url: "", overview: "컬처패스의 주요 화면을 웹과 모바일로 확장한 인터랙티브 데모입니다. 사용자가 문화 혜택을 탐색하고 쿠폰 상세를 확인한 뒤 제휴사로 이동하는 흐름을 한눈에 이해하도록 구성했습니다.", focus: ["혜택 탐색", "쿠폰 상세", "번호 복사", "반응형 화면"] },
   },
   {
-    key: "2",
-    number: "02",
-    title: "Orbit",
-    kicker: "Gravity, held lightly",
-    description: "Two forms keep a measured distance, circling the invisible point where attention begins.",
-    detail: "VECTOR / MOTION STUDY",
-    year: "2026",
-    variant: "orbit",
+    key: "2", number: "02", title: "BITE", shortTitle: "BITE 콘텐츠 추천 앱",
+    kicker: "Small bites, brighter days.",
+    description: "식사 시간과 이동 시간 사이, 지금의 여유에 맞는 콘텐츠를 발견하는 시간 기반 추천 앱입니다.",
+    detail: "APP UX/UI · CONTENT DISCOVERY", year: "2026", variant: "orbit",
     gallery: [
-      { kind: "line", variant: "orbit", label: "PRIMARY FORM" },
-      { kind: "line", variant: "ripple", label: "MOTION STUDY" },
-      { kind: "line", variant: "orbit", label: "DETAIL / 02" },
+      { kind: "image", src: "/assets/bite-portfolio-overview.png", alt: "BITE 콘텐츠 추천 앱의 홈, 재생, 취향 화면", label: "PROJECT OVERVIEW" },
+      { kind: "line", variant: "orbit", label: "MOTION STUDY" },
     ],
-    project: { client: "Independent Study", role: "Visual Design / Motion", medium: "Vector / Motion Study", url: "" },
+    project: { client: "BITE", role: "UX/UI Design", medium: "Content Discovery App", url: "", overview: "BITE는 사용자가 설정한 식사·이동 시간과 상황에 맞춰 부담 없이 볼 수 있는 영상 콘텐츠를 제안하는 앱 콘셉트입니다. 추천 이유와 예상 시청 시간을 함께 보여줍니다.", focus: ["시간 기반 추천", "식사·이동 상황", "취향 설정", "저장 콘텐츠"] },
   },
   {
-    key: "3",
-    number: "03",
-    title: "Ripple",
-    kicker: "What remains after",
-    description: "The surface remembers every touch. Ripple is a slow translation of sound into a line that keeps moving.",
-    detail: "GENERATIVE / LINE SCORE",
-    year: "2025",
-    variant: "ripple",
+    key: "3", number: "03", title: "Graphic Poster", shortTitle: "그래픽 포스터",
+    kicker: "A visual idea, made visible.",
+    description: "타이포그래피와 이미지의 관계를 실험하는 그래픽 디자인 프로젝트입니다. 실제 포스터 이미지는 준비되는 대로 연결할 수 있습니다.",
+    detail: "GRAPHIC DESIGN · POSTER", year: "2026", variant: "ripple",
     gallery: [
-      { kind: "line", variant: "ripple", label: "PRIMARY FORM" },
-      { kind: "line", variant: "contour", label: "LINE SCORE" },
-      { kind: "line", variant: "ripple", label: "DETAIL / 03" },
+      { kind: "line", variant: "ripple", label: "PLACEHOLDER / POSTER" },
+      { kind: "line", variant: "contour", label: "TYPE STUDY" },
     ],
-    project: { client: "Moving Image Study", role: "Concept / Generative Design", medium: "Generative / Line Score", url: "" },
+    project: { client: "Independent Project", role: "Graphic Design", medium: "Typography / Poster", url: "", overview: "포스터 원본 이미지가 추가되면 기획 의도와 최종 결과물을 실제 작업 내용에 맞춰 업데이트합니다.", focus: ["타이포그래피", "컬러 시스템", "레이아웃", "시각적 콘셉트"] },
   },
   {
-    key: "4",
-    number: "04",
-    title: "Bloom",
-    kicker: "An opening, repeated",
-    description: "Four strokes lean toward one another, making a shape that feels less like an object and more like a beginning.",
-    detail: "INK / OBSERVATION",
-    year: "2025",
-    variant: "bloom",
+    key: "4", number: "04", title: "STILL", shortTitle: "STILL 비주얼 저널 랜딩페이지",
+    kicker: "익숙한 순간, 새로운 시선.",
+    description: "건축과 일상의 장면을 따라 시선이 흐르는 비주얼 저널. 절제된 타이포그래피와 이미지 시퀀스로 감상의 리듬을 만들었습니다.",
+    detail: "WEB DESIGN · INTERACTION · RESPONSIVE", year: "2026", variant: "bloom",
     gallery: [
-      { kind: "line", variant: "bloom", label: "PRIMARY FORM" },
-      { kind: "line", variant: "orbit", label: "OBSERVATION STUDY" },
-      { kind: "line", variant: "bloom", label: "DETAIL / 04" },
+      { kind: "image", src: "/assets/STILL-portfolio-overview.png", alt: "STILL 비주얼 저널의 데스크톱과 모바일 반응형 랜딩페이지", label: "PROJECT OVERVIEW" },
+      { kind: "line", variant: "bloom", label: "SEQUENCE STUDY" },
     ],
-    project: { client: "Independent Study", role: "Art Direction / Drawing", medium: "Ink / Observation", url: "" },
+    project: { client: "STILL", role: "Web Design / Interaction", medium: "Responsive Web", url: "", overview: "STILL은 익숙한 장면을 새로운 시선으로 바라보게 하는 비주얼 저널 웹사이트 콘셉트입니다. 큰 제목과 넉넉한 여백, 이미지 시퀀스로 편집적인 인상을 만들었습니다.", focus: ["비주얼 저널", "순차 등장 애니메이션", "스크롤 인터랙션", "반응형 웹"] },
   },
 ];
 
@@ -454,12 +434,14 @@ function renderIndex(index = activeIndex, { arriving = false } = {}) {
           <div class="copy-bottom"><p class="work-description">${artwork.description}</p><div class="work-meta"><span>${artwork.detail}</span><span>${artwork.year}</span></div></div>
           <aside class="project-detail-box" aria-label="${artwork.title} project details">
             <div class="project-detail-heading"><span class="eyebrow">PROJECT DETAILS</span><span class="project-detail-number">${artwork.number}</span></div>
+            <p class="project-detail-summary">${artwork.project.overview}</p>
             <div class="project-detail-grid">
               <div><span class="project-detail-label">CLIENT</span><span>${artwork.project.client}</span></div>
               <div><span class="project-detail-label">ROLE</span><span>${artwork.project.role}</span></div>
               <div><span class="project-detail-label">MEDIUM</span><span>${artwork.project.medium}</span></div>
               <div><span class="project-detail-label">YEAR</span><span>${artwork.year}</span></div>
             </div>
+            <div class="project-focus-list">${artwork.project.focus.map((item) => `<span>${item}</span>`).join("")}</div>
             ${artwork.project.url ? `<a class="project-link" href="${artwork.project.url}" target="_blank" rel="noreferrer">VIEW PROJECT <span>↗</span></a>` : `<button class="project-link project-link--disabled" type="button" disabled>ADD PROJECT URL <span>↗</span></button>`}
           </aside>
         </section>
