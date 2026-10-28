@@ -1,5 +1,7 @@
 import "./styles.css";
 
+const publicPath = (value) => `${import.meta.env.BASE_URL}${String(value).replace(/^\/+/, "")}`;
+
 const artworks = [
   {
     key: "1", number: "01", title: "Culture Pass", shortTitle: "경기컬처패스 리디자인",
@@ -307,7 +309,7 @@ const lineArt = {
 
 function gallerySlideMarkup(slide, artwork) {
   if (slide.kind === "image") {
-    return `<img class="artwork-photo" src="${slide.src}" alt="${slide.alt || `${artwork.title} image`}" loading="lazy" />`;
+    return `<img class="artwork-photo" src="${publicPath(slide.src)}" alt="${slide.alt || `${artwork.title} image`}" loading="lazy" />`;
   }
   if (slide.kind === "prototype") {
     const modes = slide.modes || ["interaction"];
@@ -318,7 +320,7 @@ function gallerySlideMarkup(slide, artwork) {
       </div>` : "";
     return `<div class="prototype-preview" data-prototype-preview>
       ${modeToolbar}
-      <iframe class="project-index-prototype" data-prototype-frame src="${slide.src}${slide.src.includes("?") ? "&" : "?"}chrome=0&mode=${initialMode}" title="${slide.alt}" loading="eager" allow="clipboard-write; fullscreen"></iframe>
+      <iframe class="project-index-prototype" data-prototype-frame src="${publicPath(slide.src)}${slide.src.includes("?") ? "&" : "?"}chrome=0&mode=${initialMode}" title="${slide.alt}" loading="eager" allow="clipboard-write; fullscreen"></iframe>
     </div>`;
   }
   return `<div class="project-image-placeholder"><span class="placeholder-index">PROJECT ${artwork.number}</span><strong>${artwork.shortTitle}</strong><span>${slide.label || "ARTWORK IMAGE TO BE ADDED"}</span><div class="placeholder-line"></div></div>`;
@@ -359,8 +361,8 @@ function renderLanding({ returning = false } = {}) {
           <div class="patent-plate">
             <div class="patent-artwork">
               <picture>
-                <source srcset="/assets/kim-yeil-piano-cutout.webp" type="image/webp" />
-                <img class="landing-art-image" src="/assets/kim-yeil-piano-cutout.png" alt="Transparent grand piano technical drawing with keyboard, internal strings, and structural callouts" />
+                <source srcset="${publicPath("/assets/kim-yeil-piano-cutout.webp")}" type="image/webp" />
+                <img class="landing-art-image" src="${publicPath("/assets/kim-yeil-piano-cutout.png")}" alt="Transparent grand piano technical drawing with keyboard, internal strings, and structural callouts" />
               </picture>
               ${keyboardOverlay()}
               ${patentOverlay()}
@@ -461,7 +463,7 @@ function renderIndex(index = activeIndex, { arriving = false } = {}) {
         item.classList.toggle("is-selected", selected);
         item.setAttribute("aria-selected", String(selected));
       });
-      frame.src = `/prototypes/culturepass-prototype.html?chrome=0&mode=${mode}`;
+      frame.src = `${publicPath("/prototypes/culturepass-prototype.html")}?chrome=0&mode=${mode}`;
     });
   });
   root.querySelectorAll(".piano-key").forEach((button) => {
@@ -480,9 +482,9 @@ function openProjectDetail() {
   const artwork = artworks[activeIndex];
   const firstSlide = artwork.gallery?.[0] || { kind: "placeholder", label: "ARTWORK IMAGE TO BE ADDED" };
   const visual = artwork.key === "1"
-    ? `<iframe class="project-detail-prototype" src="/prototypes/culturepass-prototype.html?chrome=0&mode=interaction" title="Culture Pass interactive prototype" loading="eager" allow="clipboard-write; fullscreen"></iframe>`
+    ? `<iframe class="project-detail-prototype" src="${publicPath("/prototypes/culturepass-prototype.html")}?chrome=0&mode=interaction" title="Culture Pass interactive prototype" loading="eager" allow="clipboard-write; fullscreen"></iframe>`
     : artwork.project.detailImage
-      ? `<img class="project-detail-image" src="${artwork.project.detailImage}" alt="${artwork.shortTitle} project overview" />`
+      ? `<img class="project-detail-image" src="${publicPath(artwork.project.detailImage)}" alt="${artwork.shortTitle} project overview" />`
     : gallerySlideMarkup(firstSlide, artwork);
   const overlay = document.createElement("div");
   overlay.className = "project-detail-overlay";
