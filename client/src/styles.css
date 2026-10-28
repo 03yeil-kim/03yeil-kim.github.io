@@ -1166,6 +1166,15 @@
   .project-detail-visual .artwork-photo { width: 100%; min-height: auto; max-height: 54svh; object-fit: contain; }
   .project-detail-visual .project-image-placeholder { min-height: 260px; }
 
+  .project-detail-prototype {
+    display: block;
+    width: 100%;
+    height: min(680px, 62svh);
+    min-height: 520px;
+    border: 0;
+    background: #edf5f7;
+  }
+
   .project-detail-content {
     display: grid;
     grid-template-columns: 1.2fr 0.8fr;
@@ -1837,6 +1846,11 @@
     .project-detail-visual {
       min-height: 170px;
       padding: 12px;
+    }
+
+    .project-detail-prototype {
+      height: 590px;
+      min-height: 590px;
     }
 
     .project-detail-content {

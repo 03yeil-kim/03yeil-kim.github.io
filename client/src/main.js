@@ -7,7 +7,7 @@ const artworks = [
     description: "좋아하는 문화를 더 가까이, 더 편리하게. 문화 혜택 탐색부터 쿠폰 사용까지 이어지는 웹·모바일 경험을 설계했습니다.",
     detail: "UI/UX DESIGN · WEB + MOBILE", year: "2026", variant: "contour",
     gallery: [
-      { kind: "image", src: "/assets/culturepass_detail_page_logo_preserved.png", alt: "경기컬처패스 웹과 모바일 리디자인 화면", label: "PROJECT OVERVIEW" },
+      { kind: "image", src: "/assets/culturepass-hero.webp", alt: "경기컬처패스 웹과 모바일 리디자인 화면", label: "PROJECT OVERVIEW" },
     ],
     project: { client: "경기컬처패스", role: "UI/UX Design", medium: "Web + Mobile", url: "", overview: "컬처패스의 주요 화면을 웹과 모바일로 확장한 인터랙티브 데모입니다. 사용자가 문화 혜택을 탐색하고 쿠폰 상세를 확인한 뒤 제휴사로 이동하는 흐름을 한눈에 이해하도록 구성했습니다.", focus: ["혜택 탐색", "쿠폰 상세", "번호 복사", "반응형 화면"] },
   },
@@ -440,7 +440,9 @@ function openProjectDetail() {
   if (root.querySelector(".project-detail-overlay")) return;
   const artwork = artworks[activeIndex];
   const firstSlide = artwork.gallery?.[0] || { kind: "placeholder", label: "ARTWORK IMAGE TO BE ADDED" };
-  const visual = gallerySlideMarkup(firstSlide, artwork);
+  const visual = artwork.key === "1"
+    ? `<iframe class="project-detail-prototype" src="/prototypes/culturepass-prototype.html?chrome=0" title="Culture Pass interactive prototype" loading="eager" allow="clipboard-write; fullscreen"></iframe>`
+    : gallerySlideMarkup(firstSlide, artwork);
   const overlay = document.createElement("div");
   overlay.className = "project-detail-overlay";
   overlay.setAttribute("role", "dialog");
