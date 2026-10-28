@@ -837,6 +837,8 @@
   }
 
   .title-wrap {
+    margin-block: auto;
+    padding-block: 30px;
     animation: title-in 480ms cubic-bezier(0.2, 0.7, 0.2, 1) both;
   }
 
@@ -851,10 +853,10 @@
   h1 {
     margin: 0;
     font-family: Georgia, "Times New Roman", serif;
-    font-size: clamp(58px, 7vw, 112px);
+    font-size: clamp(48px, 5.8vw, 88px);
     font-weight: 400;
     letter-spacing: -0.085em;
-    line-height: 0.79;
+    line-height: 0.84;
   }
 
   .copy-bottom {
@@ -1828,7 +1830,11 @@
     }
 
     h1 {
-      font-size: clamp(62px, 17vw, 104px);
+      font-size: clamp(48px, 14vw, 82px);
+    }
+
+    .title-wrap {
+      padding-block: 22px;
     }
 
     .work-description {
