@@ -7,7 +7,7 @@ const artworks = [
     description: "좋아하는 문화를 더 가까이, 더 편리하게. 문화 혜택 탐색부터 쿠폰 사용까지 이어지는 웹·모바일 경험을 설계했습니다.",
     detail: "UI/UX DESIGN · WEB + MOBILE", year: "2026", variant: "contour",
     gallery: [
-      { kind: "image", src: "/assets/culturepass-hero.webp", alt: "경기컬처패스 웹과 모바일 리디자인 화면", label: "PROJECT OVERVIEW" },
+      { kind: "prototype", src: "/prototypes/culturepass-prototype.html", alt: "경기컬처패스 모바일 및 인터랙션 프로토타입", label: "INTERACTION PREVIEW" },
     ],
     project: { client: "경기컬처패스", role: "UI/UX Design", medium: "Web + Mobile", url: "", overview: "컬처패스의 주요 화면을 웹과 모바일로 확장한 인터랙티브 데모입니다. 사용자가 문화 혜택을 탐색하고 쿠폰 상세를 확인한 뒤 제휴사로 이동하는 흐름을 한눈에 이해하도록 구성했습니다.", focus: ["혜택 탐색", "쿠폰 상세", "번호 복사", "반응형 화면"] },
   },
@@ -295,6 +295,16 @@ function gallerySlideMarkup(slide, artwork) {
   if (slide.kind === "image") {
     return `<img class="artwork-photo" src="${slide.src}" alt="${slide.alt || `${artwork.title} image`}" loading="lazy" />`;
   }
+  if (slide.kind === "prototype") {
+    return `<div class="prototype-preview" data-prototype-preview>
+      <div class="prototype-preview-toolbar" role="tablist" aria-label="Culture Pass preview mode">
+        <span class="prototype-preview-label">WORK PREVIEW</span>
+        <button type="button" class="prototype-mode-button" data-prototype-mode="mobile" aria-selected="false">MOBILE</button>
+        <button type="button" class="prototype-mode-button is-selected" data-prototype-mode="interaction" aria-selected="true">INTERACTION</button>
+      </div>
+      <iframe class="project-index-prototype" data-prototype-frame src="${slide.src}?chrome=0&mode=interaction" title="${slide.alt}" loading="eager" allow="clipboard-write; fullscreen"></iframe>
+    </div>`;
+  }
   return `<div class="project-image-placeholder"><span class="placeholder-index">PROJECT ${artwork.number}</span><strong>${artwork.shortTitle}</strong><span>${slide.label || "ARTWORK IMAGE TO BE ADDED"}</span><div class="placeholder-line"></div></div>`;
 }
 
@@ -425,6 +435,19 @@ function renderIndex(index = activeIndex, { arriving = false } = {}) {
   root.querySelector(".wordmark").addEventListener("click", () => renderLanding({ returning: true }));
   root.querySelector(".about-toggle").addEventListener("click", toggleAbout);
   root.querySelector("[data-project-detail]")?.addEventListener("click", openProjectDetail);
+  root.querySelectorAll("[data-prototype-mode]").forEach((button) => {
+    button.addEventListener("click", () => {
+      const mode = button.dataset.prototypeMode;
+      const frame = root.querySelector("[data-prototype-frame]");
+      if (!frame || !mode) return;
+      root.querySelectorAll("[data-prototype-mode]").forEach((item) => {
+        const selected = item === button;
+        item.classList.toggle("is-selected", selected);
+        item.setAttribute("aria-selected", String(selected));
+      });
+      frame.src = `/prototypes/culturepass-prototype.html?chrome=0&mode=${mode}`;
+    });
+  });
   root.querySelectorAll(".piano-key").forEach((button) => {
     button.addEventListener("click", () => renderIndex(Number(button.dataset.index)));
   });
