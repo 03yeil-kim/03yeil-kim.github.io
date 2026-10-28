@@ -306,6 +306,36 @@
     @media (prefers-reduced-motion: reduce) {
       *, *::before, *::after { animation-duration: .01ms !important; transition-duration: .01ms !important; }
     }
+
+    /* PRESS PLAY embed tuning: keep the outer preview frame, compact the app content. */
+    .preview-header { min-height: 46px; padding: 0 16px; font-size: 9px; }
+    .preview-tabs { height: 46px; gap: 14px; }
+    .preview-body { min-height: 0; padding: 20px 28px 48px; }
+    .device-frame { width: min(100%, 460px); height: min(690px, calc(100vh - 170px)); min-height: 520px; border-radius: 30px; }
+    .app-topbar { min-height: 66px; padding: 0 22px; }
+    .content { max-width: 420px; padding: 30px 22px 90px; }
+    .hero h1 { font-size: 34px; }
+    .context-switcher { gap: 4px; margin-bottom: 30px; padding: 4px; border-radius: 14px; }
+    .context-tab { min-height: 56px; gap: 8px; padding: 8px 10px; border-radius: 11px; }
+    .section-row { gap: 12px; margin-bottom: 11px; }
+    .section-row h2 { font-size: 17px; }
+    .recommendation-copy { padding: 18px; }
+    .recommendation-copy h2 { margin-bottom: 7px; font-size: 25px; }
+    .recommendation-copy p { margin-bottom: 14px; font-size: 11px; }
+    .reason { gap: 6px; margin-bottom: 15px; font-size: 9px; }
+    .continue-card, .quick-card { gap: 9px; padding: 7px; border-radius: 12px; }
+    .quick-grid { gap: 7px; }
+    .play-cta, .save-btn { min-height: 38px; padding: 0 12px; gap: 6px; font-size: 10px; }
+    .bottom-nav { width: min(370px, calc(100% - 28px)); padding: 4px; }
+    @media (max-width: 620px) {
+      .preview-body { padding: 16px 18px 42px; }
+      .device-frame { width: min(100%, 380px); height: 620px; min-height: 0; border-radius: 26px; }
+      .app-topbar { min-height: 58px; padding: 0 18px; }
+      .content { padding: 24px 18px 82px; }
+      .hero h1 { font-size: 30px; }
+      .context-tab { min-height: 50px; }
+    }
+
   </style>
 </head>
 <body>
