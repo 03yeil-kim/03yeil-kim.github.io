@@ -7,7 +7,7 @@ const artworks = [
     description: "기존 컬처패스 서비스의 정보 구조와 쿠폰 사용 흐름을 다시 살펴, 문화 혜택을 더 빠르게 발견하고 실제 사용까지 자연스럽게 이어지도록 웹·모바일 경험을 리디자인했습니다.",
     detail: "SERVICE REDESIGN · UI/UX · WEB + MOBILE", year: "2026", variant: "contour",
     gallery: [
-      { kind: "prototype", src: "/prototypes/culturepass-prototype.html", alt: "경기컬처패스 모바일 및 인터랙션 프로토타입", label: "INTERACTION PREVIEW" },
+      { kind: "prototype", src: "/prototypes/culturepass-prototype.html", alt: "경기컬처패스 모바일 및 인터랙션 프로토타입", label: "INTERACTION PREVIEW", modes: ["mobile", "interaction"] },
     ],
     project: { client: "경기컬처패스", role: "Service Redesign / UI·UX", medium: "Web + Mobile", url: "", overview: "기존 컬처패스 서비스의 복잡한 탐색과 쿠폰 사용 흐름을 분석하고, 혜택 발견부터 쿠폰 상세 확인·번호 복사·제휴사 이동까지의 경험을 다시 설계한 리디자인 프로젝트입니다.", focus: ["기존 서비스 분석", "정보 구조 재정리", "쿠폰 사용 흐름", "반응형 리디자인"] },
   },
@@ -17,7 +17,7 @@ const artworks = [
     description: "식사 시간과 이동 시간 사이, 지금의 여유에 맞는 콘텐츠를 발견하는 시간 기반 추천 앱입니다.",
     detail: "APP UX/UI · CONTENT DISCOVERY", year: "2026", variant: "orbit",
     gallery: [
-      { kind: "image", src: "/assets/bite-portfolio-overview.png", alt: "BITE 콘텐츠 추천 앱의 홈, 재생, 취향 화면", label: "PROJECT OVERVIEW" },
+      { kind: "prototype", src: "/prototypes/bite-portfolio-prototype.html", alt: "BITE 모바일 콘텐츠 추천 앱 프로토타입", label: "MOBILE INTERACTION", modes: ["mobile"] },
     ],
     project: { client: "BITE", role: "UX/UI Design", medium: "Content Discovery App", url: "", overview: "BITE는 사용자가 설정한 식사·이동 시간과 상황에 맞춰 부담 없이 볼 수 있는 영상 콘텐츠를 제안하는 앱 콘셉트입니다. 추천 이유와 예상 시청 시간을 함께 보여줍니다.", focus: ["시간 기반 추천", "식사·이동 상황", "취향 설정", "저장 콘텐츠"] },
   },
@@ -296,13 +296,15 @@ function gallerySlideMarkup(slide, artwork) {
     return `<img class="artwork-photo" src="${slide.src}" alt="${slide.alt || `${artwork.title} image`}" loading="lazy" />`;
   }
   if (slide.kind === "prototype") {
-    return `<div class="prototype-preview" data-prototype-preview>
-      <div class="prototype-preview-toolbar" role="tablist" aria-label="Culture Pass preview mode">
+    const modes = slide.modes || ["interaction"];
+    const initialMode = modes.includes("interaction") ? "interaction" : modes[0];
+    const modeToolbar = modes.length > 1 ? `<div class="prototype-preview-toolbar" role="tablist" aria-label="${artwork.title} preview mode">
         <span class="prototype-preview-label">WORK PREVIEW</span>
-        <button type="button" class="prototype-mode-button" data-prototype-mode="mobile" aria-selected="false">MOBILE</button>
-        <button type="button" class="prototype-mode-button is-selected" data-prototype-mode="interaction" aria-selected="true">INTERACTION</button>
-      </div>
-      <iframe class="project-index-prototype" data-prototype-frame src="${slide.src}?chrome=0&mode=interaction" title="${slide.alt}" loading="eager" allow="clipboard-write; fullscreen"></iframe>
+        ${modes.map((mode) => `<button type="button" class="prototype-mode-button ${mode === initialMode ? "is-selected" : ""}" data-prototype-mode="${mode}" aria-selected="${mode === initialMode}">${mode.toUpperCase()}</button>`).join("")}
+      </div>` : "";
+    return `<div class="prototype-preview" data-prototype-preview>
+      ${modeToolbar}
+      <iframe class="project-index-prototype" data-prototype-frame src="${slide.src}${slide.src.includes("?") ? "&" : "?"}chrome=0&mode=${initialMode}" title="${slide.alt}" loading="eager" allow="clipboard-write; fullscreen"></iframe>
     </div>`;
   }
   return `<div class="project-image-placeholder"><span class="placeholder-index">PROJECT ${artwork.number}</span><strong>${artwork.shortTitle}</strong><span>${slide.label || "ARTWORK IMAGE TO BE ADDED"}</span><div class="placeholder-line"></div></div>`;
