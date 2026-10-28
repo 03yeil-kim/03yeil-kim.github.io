@@ -36,6 +36,7 @@
 - [x] 간단한 작품 소개 아래에 Client, Role, Medium, Year를 보여주는 Project Details 박스와 프로젝트 URL 연결 슬롯을 배치한다.
 - [x] `PROJECT DETAIL` 버튼을 누르면 현재 작품의 이미지, 개요, 디자인 포커스, 역할·매체 정보를 중앙 확대 오버레이로 보여주며, CLOSE·배경 클릭·Escape 키로 닫을 수 있다.
 - [x] 업로드된 실제 작업인 Culture Pass, BITE, Graphic Poster, STILL을 `KEY 1–4`에 연결하고, 제공된 PNG 자산을 인덱스 갤러리에서 사용한다.
+- [x] 비어 있는 Graphic Poster를 제거하고 Culture Pass, BITE, STILL의 3개 작품만 `KEY 1–3`에 배치한다. 기존 건반 영역의 전체 크기는 유지하며 칸만 3개로 줄이고, 각 칸의 건반 상부 캡과 작품명·번호를 중앙 정렬한다.
 
 ## 피아노 키 내비게이션
 - [x] 하단에 KEY 1부터 KEY 4까지 총 4개의 피아노 건반 형태 작품 선택 인터페이스를 배치한다.

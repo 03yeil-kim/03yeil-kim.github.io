@@ -22,17 +22,7 @@ const artworks = [
     project: { client: "BITE", role: "UX/UI Design", medium: "Content Discovery App", url: "", overview: "BITE는 사용자가 설정한 식사·이동 시간과 상황에 맞춰 부담 없이 볼 수 있는 영상 콘텐츠를 제안하는 앱 콘셉트입니다. 추천 이유와 예상 시청 시간을 함께 보여줍니다.", focus: ["시간 기반 추천", "식사·이동 상황", "취향 설정", "저장 콘텐츠"] },
   },
   {
-    key: "3", number: "03", title: "Graphic Poster", shortTitle: "그래픽 포스터",
-    kicker: "A visual idea, made visible.",
-    description: "타이포그래피와 이미지의 관계를 실험하는 그래픽 디자인 프로젝트입니다. 실제 포스터 이미지는 준비되는 대로 연결할 수 있습니다.",
-    detail: "GRAPHIC DESIGN · POSTER", year: "2026", variant: "ripple",
-    gallery: [
-      { kind: "placeholder", label: "POSTER IMAGE TO BE ADDED" },
-    ],
-    project: { client: "Independent Project", role: "Graphic Design", medium: "Typography / Poster", url: "", overview: "포스터 원본 이미지가 추가되면 기획 의도와 최종 결과물을 실제 작업 내용에 맞춰 업데이트합니다.", focus: ["타이포그래피", "컬러 시스템", "레이아웃", "시각적 콘셉트"] },
-  },
-  {
-    key: "4", number: "04", title: "STILL", shortTitle: "STILL 비주얼 저널 랜딩페이지",
+    key: "3", number: "03", title: "STILL", shortTitle: "STILL 비주얼 저널 랜딩페이지",
     kicker: "익숙한 순간, 새로운 시선.",
     description: "건축과 일상의 장면을 따라 시선이 흐르는 비주얼 저널. 절제된 타이포그래피와 이미지 시퀀스로 감상의 리듬을 만들었습니다.",
     detail: "WEB DESIGN · INTERACTION · RESPONSIVE", year: "2026", variant: "bloom",
@@ -339,7 +329,7 @@ function renderLanding({ returning = false } = {}) {
         </section>
         <section class="landing-art" aria-label="Kim Yeil piano keyboard one-line signature artwork">
           <div class="landing-art-label landing-art-label--top">PATENT STUDY / GRAND PIANO</div>
-          <div class="landing-art-label landing-art-label--side">STRUCTURAL INDEX / 01—04</div>
+          <div class="landing-art-label landing-art-label--side">STRUCTURAL INDEX / 01—03</div>
           <div class="patent-plate">
             <div class="patent-artwork">
               <picture>
@@ -399,9 +389,9 @@ function renderIndex(index = activeIndex, { arriving = false } = {}) {
         <div class="topbar-right"><button class="about-toggle" type="button">ABOUT</button><span class="edition">SEOUL — 2026</span></div>
       </header>
       <main class="gallery-main">
-        <div class="gallery-index" aria-hidden="true"><span class="vertical-label">SELECTED WORK / 04</span><span class="index-line"></span><span class="index-count">${artwork.number}</span></div>
+        <div class="gallery-index" aria-hidden="true"><span class="vertical-label">SELECTED WORK / ${String(artworks.length).padStart(2, "0")}</span><span class="index-line"></span><span class="index-count">${artwork.number}</span></div>
         <section class="work-copy" aria-live="polite">
-          <div class="copy-topline"><span class="eyebrow">WORK ${artwork.number} / 04</span><span class="copy-status"><span class="status-dot"></span> PLAYING</span></div>
+          <div class="copy-topline"><span class="eyebrow">WORK ${artwork.number} / ${String(artworks.length).padStart(2, "0")}</span><span class="copy-status"><span class="status-dot"></span> PLAYING</span></div>
           <div class="title-wrap"><p class="work-kicker">${artwork.kicker}</p><h1>${artwork.title}</h1></div>
           <div class="copy-bottom"><p class="work-description">${artwork.description}</p><div class="work-meta"><span>${artwork.detail}</span><span>${artwork.year}</span></div></div>
           <aside class="project-detail-box" aria-label="${artwork.title} project details">
@@ -419,7 +409,7 @@ function renderIndex(index = activeIndex, { arriving = false } = {}) {
         </section>
         <section class="art-stage" aria-label="${artwork.title} artwork">
           <div class="stage-corner stage-corner--tl">ONE-LINE / MOTION</div><div class="stage-corner stage-corner--br">PRESS TO PLAY</div>
-          <div class="art-frame">${galleryMarkup(artwork)}</div><div class="stage-mark" aria-hidden="true">PP<span>01—04</span></div>
+          <div class="art-frame">${galleryMarkup(artwork)}</div><div class="stage-mark" aria-hidden="true">PP<span>01—${String(artworks.length).padStart(2, "0")}</span></div>
         </section>
       </main>
       <footer class="key-dock">
@@ -427,9 +417,9 @@ function renderIndex(index = activeIndex, { arriving = false } = {}) {
         <div class="piano-keys" role="group" aria-label="Choose a piece">
           ${artworks.map((item, itemIndex) => `<button class="piano-key ${itemIndex === activeIndex ? "is-active is-pressed" : ""}" type="button" data-index="${itemIndex}" aria-pressed="${itemIndex === activeIndex}" aria-label="Play ${item.title}, key ${item.key}"><span class="key-cap"></span><span class="key-number">KEY ${item.key}</span><span class="key-name">${item.title}</span><span class="key-arrow">↗</span></button>`).join("")}
         </div>
-        <div class="dock-side-note" aria-hidden="true"><span>01</span><span class="dock-side-line"></span><span>04</span></div>
+        <div class="dock-side-note" aria-hidden="true"><span>01</span><span class="dock-side-line"></span><span>${String(artworks.length).padStart(2, "0")}</span></div>
       </footer>
-      ${arriving ? `<div class="route-transition route-transition--reveal" aria-hidden="true"><span class="route-transition__line"></span><span class="route-transition__label">PLAYING 01 / 04</span></div>` : ""}
+      ${arriving ? `<div class="route-transition route-transition--reveal" aria-hidden="true"><span class="route-transition__line"></span><span class="route-transition__label">PLAYING 01 / ${String(artworks.length).padStart(2, "0")}</span></div>` : ""}
     </div>`;
 
   root.querySelector(".wordmark").addEventListener("click", () => renderLanding({ returning: true }));
@@ -460,7 +450,7 @@ function openProjectDetail() {
     <div class="project-detail-panel">
       <button class="project-detail-close" type="button" aria-label="Close project detail">CLOSE <span>×</span></button>
       <div class="project-detail-heading">
-        <p class="eyebrow">PROJECT ${artwork.number} / 04 · ${artwork.detail}</p>
+        <p class="eyebrow">PROJECT ${artwork.number} / ${String(artworks.length).padStart(2, "0")} · ${artwork.detail}</p>
         <h2>${artwork.title}</h2>
         <p class="project-detail-kicker">${artwork.kicker}</p>
       </div>

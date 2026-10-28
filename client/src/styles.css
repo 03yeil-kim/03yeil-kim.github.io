@@ -1301,7 +1301,7 @@
   .piano-keys {
     position: relative;
     display: grid;
-    grid-template-columns: repeat(4, 1fr);
+    grid-template-columns: repeat(3, 1fr);
     gap: 0;
     border: 1px solid var(--foreground);
     box-shadow: 0 5px 0 var(--foreground);
@@ -1318,7 +1318,7 @@
     color: var(--foreground);
     background: linear-gradient(to bottom, #f0f6f9 0%, #e0ebf1 75%, #c9d9e3 75%, #c9d9e3 100%);
     cursor: pointer;
-    text-align: left;
+    text-align: center;
     transition: background 180ms ease, color 180ms ease, transform 180ms ease, box-shadow 180ms ease;
   }
 
