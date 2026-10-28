@@ -419,7 +419,7 @@ function renderIndex(index = activeIndex, { arriving = false } = {}) {
         </section>
         <section class="art-stage" aria-label="${artwork.title} artwork">
           <div class="stage-corner stage-corner--tl">ONE-LINE / MOTION</div><div class="stage-corner stage-corner--br">PRESS TO PLAY</div>
-          <div class="art-frame">${galleryMarkup(artwork)}</div><div class="stage-mark" aria-hidden="true">PP<span>01—${String(artworks.length).padStart(2, "0")}</span></div>
+          <div class="art-frame">${galleryMarkup(artwork)}</div>
         </section>
       </main>
       <footer class="key-dock">
