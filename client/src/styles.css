@@ -851,7 +851,7 @@
   h1 {
     margin: 0;
     font-family: Georgia, "Times New Roman", serif;
-    font-size: clamp(68px, 9vw, 145px);
+    font-size: clamp(58px, 7vw, 112px);
     font-weight: 400;
     letter-spacing: -0.085em;
     line-height: 0.79;
@@ -1828,7 +1828,7 @@
     }
 
     h1 {
-      font-size: clamp(72px, 20vw, 124px);
+      font-size: clamp(62px, 17vw, 104px);
     }
 
     .work-description {
