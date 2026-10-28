@@ -312,7 +312,7 @@ function galleryMarkup(artwork) {
   const slide = (artwork.gallery || [])[0] || { kind: "placeholder", label: "ARTWORK IMAGE TO BE ADDED" };
   return `
     <div class="artwork-gallery" aria-label="${artwork.title} image gallery">
-      <div class="gallery-viewport ${slide.kind === "image" ? "gallery-viewport--image" : "gallery-viewport--placeholder"}">
+      <div class="gallery-viewport ${slide.kind === "image" ? "gallery-viewport--image" : slide.kind === "prototype" ? "gallery-viewport--prototype" : "gallery-viewport--placeholder"}">
         ${gallerySlideMarkup(slide, artwork)}
       </div>
     </div>`;

@@ -974,6 +974,12 @@
     justify-content: flex-start;
   }
 
+  .gallery-viewport--prototype {
+    align-items: center;
+    justify-content: center;
+    padding: 28px 4% 42px;
+  }
+
   .gallery-viewport--placeholder {
     align-items: center;
     justify-content: center;
@@ -981,11 +987,12 @@
 
   .prototype-preview {
     display: flex;
-    width: 100%;
+    width: min(100%, 760px);
     height: 100%;
     min-height: 320px;
     flex-direction: column;
     overflow: hidden;
+    margin-inline: auto;
     border: 1px solid rgba(16, 42, 67, 0.2);
     background: #edf5f7;
   }
