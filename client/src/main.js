@@ -27,9 +27,9 @@ const artworks = [
     description: "건축과 일상의 장면을 따라 시선이 흐르는 비주얼 저널. 절제된 타이포그래피와 이미지 시퀀스로 감상의 리듬을 만들었습니다.",
     detail: "WEB DESIGN · INTERACTION · RESPONSIVE", year: "2026", variant: "bloom",
     gallery: [
-      { kind: "image", src: "/assets/STILL-portfolio-overview.png", alt: "STILL 비주얼 저널의 데스크톱과 모바일 반응형 랜딩페이지", label: "PROJECT OVERVIEW" },
+      { kind: "prototype", src: "/prototypes/still-demo.html", alt: "STILL 비주얼 저널 인터랙티브 랜딩 프로토타입", label: "INTERACTIVE PREVIEW", modes: ["mobile"] },
     ],
-    project: { client: "STILL", role: "Web Design / Interaction", medium: "Responsive Web", url: "", overview: "STILL은 익숙한 장면을 새로운 시선으로 바라보게 하는 비주얼 저널 웹사이트 콘셉트입니다. 큰 제목과 넉넉한 여백, 이미지 시퀀스로 편집적인 인상을 만들었습니다.", focus: ["비주얼 저널", "순차 등장 애니메이션", "스크롤 인터랙션", "반응형 웹"] },
+    project: { client: "STILL", role: "Web Design / Interaction", medium: "Responsive Web", detailImage: "/assets/STILL-portfolio-overview.png", url: "", overview: "STILL은 익숙한 장면을 새로운 시선으로 바라보게 하는 비주얼 저널 웹사이트 콘셉트입니다. 큰 제목과 넉넉한 여백, 이미지 시퀀스로 편집적인 인상을 만들었습니다.", focus: ["비주얼 저널", "순차 등장 애니메이션", "스크롤 인터랙션", "반응형 웹"] },
   },
 ];
 

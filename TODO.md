@@ -42,6 +42,8 @@
 - [x] `KEY 2 / BITE`의 메인 작품 프레임에 업로드된 단일 HTML 모바일 프로토타입을 삽입하고, 앱 내부 콘텐츠 선택·저장·프로필·하단 네비게이션 인터랙션을 직접 사용할 수 있게 한다.
 - [x] `KEY 2 / BITE`의 `PROJECT DETAIL` 중앙 오버레이에는 업로드된 `bite-portfolio-overview.webp` 포트폴리오 이미지를 대표 상세 이미지로 표시한다.
 - [x] BITE Work Preview의 외곽 프레임 크기는 유지하고, 내부 모바일 앱의 폰트·카드·섹션 간격·상단 여백을 Culture Pass 프리뷰와 같은 밀도로 축소한다.
+- [x] `KEY 3 / STILL`의 메인 Work Preview에 업로드된 `still-demo.html` 인터랙티브 랜딩을 인덱스 1·2와 동일한 프레임 구조로 삽입한다.
+- [x] STILL의 기존 `STILL-portfolio-overview.png` Project Detail 대표 이미지와 프로젝트 정보는 변경하지 않는다.
 
 ## 피아노 키 내비게이션
 - [x] 하단에 KEY 1부터 KEY 4까지 총 4개의 피아노 건반 형태 작품 선택 인터페이스를 배치한다.
