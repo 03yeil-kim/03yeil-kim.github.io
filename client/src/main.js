@@ -19,7 +19,7 @@ const artworks = [
     gallery: [
       { kind: "prototype", src: "/prototypes/bite-portfolio-prototype.html", alt: "BITE 모바일 콘텐츠 추천 앱 프로토타입", label: "MOBILE INTERACTION", modes: ["mobile"] },
     ],
-    project: { client: "BITE", role: "UX/UI Design", medium: "Content Discovery App", url: "", overview: "BITE는 사용자가 설정한 식사·이동 시간과 상황에 맞춰 부담 없이 볼 수 있는 영상 콘텐츠를 제안하는 앱 콘셉트입니다. 추천 이유와 예상 시청 시간을 함께 보여줍니다.", focus: ["시간 기반 추천", "식사·이동 상황", "취향 설정", "저장 콘텐츠"] },
+    project: { client: "BITE", role: "UX/UI Design", medium: "Content Discovery App", detailImage: "/assets/bite-portfolio-overview.webp", url: "", overview: "BITE는 사용자가 설정한 식사·이동 시간과 상황에 맞춰 부담 없이 볼 수 있는 영상 콘텐츠를 제안하는 앱 콘셉트입니다. 추천 이유와 예상 시청 시간을 함께 보여줍니다.", focus: ["시간 기반 추천", "식사·이동 상황", "취향 설정", "저장 콘텐츠"] },
   },
   {
     key: "3", number: "03", title: "STILL", shortTitle: "STILL 비주얼 저널 랜딩페이지",
@@ -466,7 +466,9 @@ function openProjectDetail() {
   const artwork = artworks[activeIndex];
   const firstSlide = artwork.gallery?.[0] || { kind: "placeholder", label: "ARTWORK IMAGE TO BE ADDED" };
   const visual = artwork.key === "1"
-    ? `<iframe class="project-detail-prototype" src="/prototypes/culturepass-prototype.html?chrome=0" title="Culture Pass interactive prototype" loading="eager" allow="clipboard-write; fullscreen"></iframe>`
+    ? `<iframe class="project-detail-prototype" src="/prototypes/culturepass-prototype.html?chrome=0&mode=interaction" title="Culture Pass interactive prototype" loading="eager" allow="clipboard-write; fullscreen"></iframe>`
+    : artwork.project.detailImage
+      ? `<img class="project-detail-image" src="${artwork.project.detailImage}" alt="${artwork.shortTitle} project overview" />`
     : gallerySlideMarkup(firstSlide, artwork);
   const overlay = document.createElement("div");
   overlay.className = "project-detail-overlay";
