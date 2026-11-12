@@ -1,0 +1,1274 @@
+/* =========================================================
+   PRESS PLAY. — About: 연주하는 소개 무대 + 피아노 특허 도면
+   ========================================================= */
+
+.landing-overline {
+  margin: 0 0 30px;
+  color: var(--accent);
+  font-size: 9px;
+  letter-spacing: 0.2em;
+}
+
+.landing-art {
+  /* 틀 없이 도면만 크게 — 단, 페이지가 넘어간 첫 화면 안에 도면 전체가 들어오도록
+     화면 높이에 맞춰 폭을 제한 (4:3 비율, 위아래 제목줄·여백 약 260px 제외) */
+  position: relative;
+  width: min(100%, calc((100svh - 260px) * 4 / 3));
+  margin-left: auto;
+  animation: landing-art-in 850ms 180ms cubic-bezier(0.2, 0.75, 0.2, 1) both;
+}
+
+.patent-plate {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 4 / 3;
+  overflow: hidden;
+  /* 확대될 때 잘리는 가장자리가 보이지 않도록 네 변을 부드럽게 흐림 */
+  -webkit-mask-image:
+    linear-gradient(to right, transparent, #000 7%, #000 93%, transparent),
+    linear-gradient(to bottom, transparent, #000 7%, #000 93%, transparent);
+  -webkit-mask-composite: source-in;
+  mask-image:
+    linear-gradient(to right, transparent, #000 7%, #000 93%, transparent),
+    linear-gradient(to bottom, transparent, #000 7%, #000 93%, transparent);
+  mask-composite: intersect;
+  animation: patent-image-in 900ms 180ms cubic-bezier(0.2, 0.75, 0.2, 1) both;
+}
+
+.patent-artwork {
+  position: absolute;
+  inset: 0;
+  transform-origin: 0 0;
+  transition: transform 980ms cubic-bezier(0.2, 0.8, 0.2, 1);
+  will-change: transform;
+}
+
+.landing-art .patent-plate picture {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  max-height: none;
+  margin: 0;
+  animation: none;
+}
+
+.patent-overlay {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  overflow: visible;
+  pointer-events: none;
+}
+
+.keyboard-overlay {
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+}
+
+.keyboard-key {
+  fill: transparent;
+  stroke: var(--accent);
+  stroke-width: 1.2;
+  opacity: 0;
+  transform-box: fill-box;
+  transform-origin: 100% 50%;
+  vector-effect: non-scaling-stroke;
+}
+
+.keyboard-spine {
+  fill: none;
+  stroke: var(--accent);
+  stroke-width: 1;
+  stroke-dasharray: 1 5;
+  opacity: 0.4;
+  vector-effect: non-scaling-stroke;
+}
+
+.keyboard-key.is-playing {
+  animation: piano-key-press 320ms cubic-bezier(0.2, 0.8, 0.2, 1) both;
+}
+
+.patent-route {
+  fill: none;
+  stroke: var(--accent);
+  stroke-width: 1.7;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  stroke-dasharray: 1;
+  stroke-dashoffset: 1;
+  opacity: 0;
+  vector-effect: non-scaling-stroke;
+}
+
+.patent-node {
+  fill: var(--background);
+  stroke: var(--accent);
+  stroke-width: 1.6;
+  opacity: 0;
+  transform-box: fill-box;
+  transform-origin: center;
+  vector-effect: non-scaling-stroke;
+}
+
+.patent-number,
+  .patent-label {
+  fill: var(--accent);
+  opacity: 0;
+  font-family: var(--font-mono);
+  font-size: 10px;
+  letter-spacing: 0.08em;
+}
+
+.patent-number {
+  font-weight: 700;
+}
+
+.patent-cursor {
+  fill: var(--accent);
+  opacity: 0.9;
+  filter: drop-shadow(0 0 3px rgba(var(--accent-rgb), 0.35));
+}
+
+.patent-step.is-active .patent-route {
+  animation: draw-patent-route 620ms cubic-bezier(0.2, 0.8, 0.2, 1) forwards;
+}
+
+.patent-step.is-active .patent-node {
+  animation: patent-node-in 260ms ease forwards;
+}
+
+.patent-step.is-active .patent-number,
+  .patent-step.is-active .patent-label {
+  animation: patent-label-in 260ms 100ms ease forwards;
+}
+
+.patent-step {
+  cursor: pointer;
+  pointer-events: all;
+  outline: none;
+}
+
+.patent-step:focus-visible .patent-node {
+  stroke-width: 3;
+}
+
+.landing-art-image {
+  display: block;
+  width: 100%;
+  height: 100%;
+  max-height: none;
+  object-fit: cover;
+  mix-blend-mode: screen;
+  filter: grayscale(1) invert(1) contrast(1.3) brightness(1.05);
+}
+
+.landing-art-caption {
+  margin: 6px 7% 0 0;
+  color: var(--accent);
+  font-size: 8px;
+  letter-spacing: 0.18em;
+  text-align: right;
+}
+
+.landing-art-caption span {
+  margin-left: 10px;
+  color: var(--muted-foreground);
+}
+
+.landing-footer-dot {
+  display: block;
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  background: var(--accent);
+}
+
+/* =========================================================
+   02 ABOUT — 빈 무대 (Empty Stage)
+   차가운 블루 스포트라이트 + 연기(헤이즈) + 선 드로잉 마이크
+   건반(K I M Y E I L)은 무대 앞 풋라이트: 누르면 불이 들어오고 조명이 그쪽으로 기움 (js/stage.js)
+   ========================================================= */
+.about-section {
+  --about-max: 1680px;
+  --stage-ease: cubic-bezier(0.2, 0.8, 0.2, 1);
+
+  position: relative;
+  min-height: 100svh;
+  padding: clamp(28px, 4vh, 48px) 42px 48px;
+  color: var(--foreground);
+  background: var(--background);
+}
+
+.about-section > * {
+  max-width: var(--about-max);
+  margin-inline: auto;
+}
+
+/* ---------- 머리줄 ---------- */
+.about-head {
+  display: flex;
+  align-items: center;
+  gap: 18px;
+  margin-bottom: clamp(14px, 2.5vh, 24px);
+}
+
+.about-num {
+  color: var(--accent);
+  font-family: var(--font-serif);
+  font-size: 26px;
+  font-style: italic;
+  text-shadow: var(--glow-text);
+}
+
+.about-rule {
+  flex: 1;
+  height: 1px;
+  background: var(--foreground);
+  opacity: 0.3;
+}
+
+.turn-back {
+  padding: 6px 0 6px 10px;
+  color: var(--muted-foreground);
+  background: none;
+  cursor: pointer;
+  font-size: 9px;
+  letter-spacing: 0.2em;
+  white-space: nowrap;
+  transition: color 180ms ease;
+}
+
+.turn-back span {
+  color: var(--accent);
+}
+
+.turn-back:hover {
+  color: var(--foreground);
+}
+
+/* =========================================================
+   무대
+   ========================================================= */
+.play-about {
+  display: flex;
+  flex-direction: column;
+}
+
+.pa-stage {
+  --spot-x: 30%;     /* 스포트라이트가 떨어지는 가로 위치 */
+  --spot-tilt: 12deg;
+
+  /* 빛이 바닥에 닿는 가로 위치: 빛줄기는 위에서 기울어 내려오므로 바닥에서는 왼쪽으로 밀림
+     (빛 꼭대기 -8% → 바닥선 91% = 무대 높이의 99%만큼 내려오며 tan(기울기)만큼 이동) */
+  --stage-h: clamp(440px, 64svh, 680px);
+  --light-x: calc(var(--spot-x) - var(--stage-h) * 0.99 * tan(var(--spot-tilt)));
+
+  position: relative;
+  height: var(--stage-h);
+  overflow: hidden;
+  border-radius: 6px 6px 0 0;
+  background:
+    radial-gradient(120% 80% at 50% 120%, rgba(var(--spot-rgb), 0.07), transparent 60%),
+    #030508;
+  isolation: isolate;
+}
+
+/* 연기: 흐릿한 덩어리 세 개가 천천히 흐름 */
+.pa-stage::before,
+.pa-stage::after {
+  content: "";
+  position: absolute;
+  inset: -25%;
+  z-index: 0;
+  pointer-events: none;
+  filter: blur(46px);
+  opacity: 0.6;
+}
+
+.pa-stage::before {
+  background:
+    radial-gradient(28% 22% at 22% 30%, rgba(var(--spot-rgb), 0.16), transparent 70%),
+    radial-gradient(30% 24% at 48% 58%, rgba(var(--spot-rgb), 0.12), transparent 70%),
+    radial-gradient(26% 20% at 12% 72%, rgba(var(--spot-rgb), 0.1), transparent 70%);
+  animation: haze-drift 18s ease-in-out infinite alternate;
+}
+
+.pa-stage::after {
+  background:
+    radial-gradient(24% 20% at 70% 40%, rgba(var(--spot-rgb), 0.06), transparent 70%),
+    radial-gradient(30% 22% at 36% 40%, rgba(var(--spot-rgb), 0.1), transparent 70%);
+  animation: haze-drift 24s -6s ease-in-out infinite alternate-reverse;
+}
+
+@keyframes haze-drift {
+  to { transform: translate(5%, -4%) scale(1.08); }
+}
+
+/* 스포트라이트 빛줄기 + 바닥에 떨어진 빛 */
+.pa-beam {
+  position: absolute;
+  top: -8%;
+  left: var(--spot-x);
+  z-index: 1;
+  width: min(46vw, 620px);
+  height: 118%;
+  pointer-events: none;
+  background: radial-gradient(ellipse 50% 100% at 50% 0, rgba(var(--spot-rgb), 0.5), rgba(var(--spot-rgb), 0.1) 55%, transparent 78%);
+  clip-path: polygon(45% 0, 55% 0, 100% 100%, 0 100%);
+  mix-blend-mode: screen;
+  transform: translateX(-50%) rotate(var(--spot-tilt));
+  transform-origin: 50% 0;
+  transition: left 1100ms var(--stage-ease), transform 1100ms var(--stage-ease), opacity 500ms ease;
+  animation: beam-flicker 7s infinite;
+}
+
+@keyframes beam-flicker {
+  0%, 46%, 50%, 100% { opacity: 1; }
+  47% { opacity: 0.82; }
+  48% { opacity: 1; }
+  49% { opacity: 0.9; }
+}
+
+.pa-pool {
+  position: absolute;
+  bottom: 9%;
+  left: var(--light-x);
+  z-index: 1;
+  width: min(40vw, 520px);
+  height: 70px;
+  pointer-events: none;
+  background: radial-gradient(ellipse, rgba(var(--spot-rgb), 0.3), transparent 70%);
+  transform: translateX(-50%);
+  transition: left 1100ms var(--stage-ease);
+}
+
+/* 워크맨 + 헤드폰 (선 드로잉): 타이틀에서만 무대 위에 놓여 있음, 카세트 릴이 천천히 돔 */
+.pa-player {
+  position: absolute;
+  bottom: calc(9% + 30px); /* 바닥에 고인 빛(높이 70px)의 한가운데를 밟고 서도록 */
+  left: calc(var(--light-x) + var(--player-nudge, -56px)); /* 좌우 미세 조정: 값이 작을수록 왼쪽 */
+  z-index: 2;
+  width: clamp(220px, 20vw, 320px);
+  height: auto;
+  overflow: visible;
+  fill: none;
+  stroke: var(--foreground);
+  stroke-width: 2.6;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  transform: translateX(-20%); /* 그림의 20% 지점 = 카세트 본체 가운데를 빛 가운데에 */
+  transition: left 1100ms var(--stage-ease), opacity 600ms ease;
+  filter: drop-shadow(0 0 4px rgba(var(--spot-rgb), 0.55)) drop-shadow(0 0 16px rgba(var(--spot-rgb), 0.25));
+}
+
+.pa-player .pa-thin { stroke-width: 1.5; }
+.pa-player .pa-cord { stroke-width: 1.8; }
+.pa-player .pa-pad { fill: var(--foreground); }
+
+.pa-player .pa-tape {
+  fill: var(--accent);
+  stroke: none;
+}
+
+.pa-player .pa-reel {
+  transform-box: fill-box;
+  transform-origin: center;
+  animation: reel-spin 3.2s linear infinite;
+}
+
+@keyframes reel-spin {
+  to { transform: rotate(360deg); }
+}
+
+.pa-stage:not(.is-title) .pa-player {
+  opacity: 0;
+}
+
+/* 조명 위치: 지금 열린 조각마다 조금씩 다른 곳을 비춤 */
+.pa-stage[data-spot="0"] { --spot-tilt: 0deg; --spot-x: calc(50% - 188px - 32px); } /* K: E와 같이 사진 위로 수직 조명 */
+/* I · Analyze: 빛이 무대 가운데에 놓인 피아노 도면에 정확히 떨어지도록 (바닥 도착점 = 50%) */
+.pa-stage[data-spot="1"] { --spot-tilt: 6deg; --spot-x: calc(50% + var(--stage-h) * 0.99 * tan(6deg)); }
+.pa-stage[data-spot="2"] { --spot-x: 50%; --spot-tilt: 0deg; } /* M: 세 기기 가운데로 수직 조명 */
+.pa-stage[data-spot="3"] { --spot-x: 24%; --spot-tilt: 13deg; }
+/* E · Instruments: 빛을 수직으로 내려 사진 한가운데를 비춤 (사진 중심 = 50% − (간격 36 + 목록 340) / 2) */
+.pa-stage[data-spot="4"] { --spot-tilt: 0deg; --spot-x: calc(50% - 188px - 32px); } /* 사진 중심에서 살짝 왼쪽(32px) */
+.pa-stage[data-spot="5"] { --spot-x: 22%; --spot-tilt: 15deg; }
+.pa-stage[data-spot="6"] { --spot-x: 32%; --spot-tilt: 6deg; }
+.pa-stage[data-spot="2"] .pa-pool { width: min(62vw, 860px); }
+.pa-stage.is-encore .pa-beam { opacity: 1; filter: brightness(1.4); }
+
+/* 왼쪽 위 작은 이름 (누르면 처음 화면) / 오른쪽 위 연주 수 */
+.pa-mini,
+.pa-counter {
+  position: absolute;
+  top: 22px;
+  z-index: 5;
+  margin: 0;
+  transition: opacity 400ms ease;
+}
+
+.pa-mini {
+  left: 26px;
+  padding: 4px 0;
+  color: var(--foreground);
+  background: none;
+  cursor: pointer;
+  font-family: var(--font-serif);
+  font-size: 17px;
+  letter-spacing: -0.02em;
+}
+
+.pa-mini em,
+.pa-name em,
+.pa-big em {
+  color: var(--accent);
+  text-shadow: var(--glow-text);
+}
+
+.pa-counter {
+  right: 26px;
+  color: var(--muted-foreground);
+  font-size: 9px;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+}
+
+.pa-counter b {
+  color: var(--accent);
+  font-weight: 400;
+  text-shadow: var(--glow-text);
+}
+
+.pa-stage.is-title .pa-mini {
+  opacity: 0;
+  pointer-events: none;
+}
+
+/* =========================================================
+   조각(패널): 무대 오른쪽, 빛이 닿는 자리에 나타남
+   ========================================================= */
+.pa-panel {
+  position: relative;
+  z-index: 3;
+}
+
+.play-about.is-live .pa-panel {
+  position: absolute;
+  top: calc(50% + 18px);
+  right: 7%;
+  width: min(46%, 640px);
+  opacity: 0;
+  visibility: hidden;
+  transform: translateY(calc(-50% + 14px));
+  transition: opacity 300ms ease, transform 300ms ease, visibility 0s 300ms;
+}
+
+.play-about.is-live .pa-panel.is-on {
+  opacity: 1;
+  visibility: visible;
+  transform: translateY(-50%);
+  transition: opacity 650ms ease 260ms, transform 750ms var(--stage-ease) 260ms, visibility 0s;
+}
+
+/* 스크립트가 없을 때: 조각을 차례로 쌓아서 모두 보여줌 */
+.play-about:not(.is-live) .pa-panel {
+  padding: 32px 7%;
+}
+
+.play-about:not(.is-live) .pa-stage {
+  height: auto;
+}
+
+.play-about:not(.is-live) :is(.pa-beam, .pa-pool, .pa-player, .pa-mini, .pa-counter) {
+  display: none;
+}
+
+/* 타이틀 카드 */
+.pa-name {
+  margin: 0;
+  font-family: var(--font-serif);
+  font-size: clamp(64px, 8.4vw, 150px);
+  font-weight: 400;
+  letter-spacing: -0.06em;
+  line-height: 0.92;
+  text-shadow: 0 0 40px rgba(var(--spot-rgb), 0.25);
+}
+
+.pa-role {
+  margin: 22px 0 0;
+  color: var(--foreground);
+  font-size: 11px;
+  letter-spacing: 0.24em;
+  text-transform: uppercase;
+}
+
+.pa-line {
+  margin: 12px 0 0;
+  color: var(--muted-foreground);
+  font-size: 14px;
+  letter-spacing: -0.01em;
+  word-break: keep-all;
+}
+
+.pa-cue {
+  margin: clamp(28px, 5vh, 52px) 0 0;
+  color: var(--accent);
+  font-size: 10px;
+  letter-spacing: 0.22em;
+  text-shadow: var(--glow-text);
+  animation: cue-blink 2.4s ease-in-out infinite;
+}
+
+.pa-cue span {
+  display: inline-block;
+  margin-right: 6px;
+  font-size: 8px;
+}
+
+@keyframes cue-blink {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.45; }
+}
+
+/* 공통 조각 글자 */
+.pa-eyebrow {
+  margin: 0 0 18px;
+  color: var(--muted-foreground);
+  font-size: 10px;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+}
+
+.pa-eyebrow b {
+  margin-right: 10px;
+  color: var(--accent);
+  font-family: var(--font-serif);
+  font-size: 18px;
+  font-style: italic;
+  font-weight: 400;
+  letter-spacing: 0;
+  text-shadow: var(--glow-text);
+}
+
+.pa-big {
+  margin: 0;
+  font-family: var(--font-serif);
+  font-size: clamp(40px, 4.6vw, 80px);
+  font-weight: 400;
+  letter-spacing: -0.05em;
+  line-height: 0.98;
+  text-shadow: 0 0 30px rgba(var(--spot-rgb), 0.2);
+}
+
+.pa-text {
+  max-width: 34em;
+  margin: 20px 0 0;
+  color: rgba(var(--ink-rgb), 0.75);
+  font-size: 14px;
+  line-height: 1.75;
+  word-break: keep-all;
+}
+
+.pa-panel--analyze .pa-caption {
+  justify-content: center;
+}
+
+.pa-caption {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 8px 16px;
+  margin: 16px 0 0;
+  color: var(--foreground);
+  font-family: var(--font-serif);
+  font-size: clamp(16px, 1.4vw, 21px);
+  letter-spacing: -0.02em;
+  word-break: keep-all;
+}
+
+.pa-caption span {
+  color: var(--muted-foreground);
+  font-family: var(--font-sans);
+  font-size: 10px;
+  letter-spacing: 0.14em;
+}
+
+.pa-link,
+.pa-mail {
+  padding: 0;
+  color: var(--accent);
+  background: none;
+  border-bottom: 1px solid rgba(var(--accent-rgb), 0.5);
+  cursor: pointer;
+  font-family: var(--font-sans);
+  font-size: 11px;
+  letter-spacing: 0.14em;
+  text-decoration: none;
+  text-shadow: var(--glow-text);
+}
+
+.pa-mail {
+  font-family: var(--font-serif);
+  font-size: clamp(18px, 1.6vw, 24px);
+  letter-spacing: -0.01em;
+}
+
+/* I · Analyze: 도면이 무대 위 마이크 자리에 서서 연주됨 */
+.play-about.is-live .pa-panel--analyze {
+  left: 6%;
+  right: 6%;
+  width: auto;
+}
+
+.pa-analyze {
+  position: relative;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  align-items: center;
+}
+
+.pa-analyze .landing-art {
+  width: min(100%, calc((64svh - 190px) * 4 / 3));
+  margin-inline: auto;
+  animation: none;
+}
+
+.pa-analyze .patent-plate {
+  animation: none;
+}
+
+.pa-analyze .landing-art-image {
+  filter: grayscale(1) invert(1) contrast(1.3) brightness(1.1) drop-shadow(0 0 6px rgba(var(--spot-rgb), 0.35));
+}
+
+/* M · Selected works: 세 기기가 바닥의 빛 위에 함께 섬 (노트북 뒤 가운데, 휴대폰 둘이 앞에서 살짝 겹침) */
+.play-about.is-live .pa-panel--works {
+  top: auto;
+  bottom: calc(9% + 18px); /* 기기 바닥이 바닥의 빛 한가운데를 밟도록 */
+  left: 6%;
+  right: 6%;
+  width: auto;
+  transform: translateY(14px);
+}
+
+.play-about.is-live .pa-panel--works.is-on {
+  transform: none;
+}
+
+.pa-panel--works {
+  --dev-h: calc(var(--stage-h) - 200px); /* 휴대폰·노트북 크기의 기준 높이 */
+}
+
+.pa-works-head {
+  display: flex;
+  align-items: baseline;
+  justify-content: center;
+  gap: 28px;
+  margin-bottom: 22px;
+}
+
+.pa-works-head .pa-eyebrow {
+  margin: 0;
+}
+
+.pa-devices {
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+}
+
+.pa-device {
+  position: relative;
+  display: block;
+  padding: 0;
+  border: 0;
+  background: none;
+  cursor: pointer;
+  opacity: 0;
+  transform: translateY(26px);
+  transition: opacity 350ms ease, transform 350ms ease;
+}
+
+.pa-panel.is-on .pa-device {
+  opacity: 1;
+  transform: none;
+  transition: opacity 700ms ease, transform 900ms var(--stage-ease), filter 300ms ease;
+}
+
+.pa-panel.is-on .pa-device--laptop { transition-delay: 300ms; }
+.pa-panel.is-on .pa-device:nth-child(1) { transition-delay: 460ms; }
+.pa-panel.is-on .pa-device:nth-child(3) { transition-delay: 580ms; }
+
+.pa-panel.is-on .pa-device:hover {
+  transform: translateY(-8px);
+  transition-delay: 0ms;
+}
+
+.pa-device:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 6px;
+}
+
+.pa-screen {
+  display: block;
+  overflow: hidden;
+  background: #0b0f16;
+}
+
+.pa-screen img {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+
+/* 휴대폰: 얇은 검은 테두리 + 둥근 화면 */
+.pa-device--phone {
+  z-index: 2;
+  width: calc(var(--dev-h) * 0.4);
+  margin-inline: calc(var(--dev-h) * -0.1);
+  padding: 5px;
+  border-radius: 24px;
+  background: #0d121b;
+  box-shadow: 0 0 0 1px rgba(var(--spot-rgb), 0.35), 0 0 30px rgba(var(--spot-rgb), 0.16), 0 26px 46px rgba(0, 0, 0, 0.65);
+}
+
+.pa-device--phone .pa-screen {
+  border-radius: 19px;
+}
+
+/* 노트북: 화면 테두리 + 아래 받침 */
+.pa-device--laptop {
+  z-index: 1;
+  width: calc(var(--dev-h) * 1.5);
+  margin-bottom: 4px;
+}
+
+.pa-device--laptop .pa-screen {
+  padding: 8px 8px 12px;
+  border-radius: 12px 12px 0 0;
+  background: #0d121b;
+  box-shadow: 0 0 0 1px rgba(var(--spot-rgb), 0.35), 0 0 40px rgba(var(--spot-rgb), 0.16);
+}
+
+.pa-device--laptop .pa-screen img {
+  border-radius: 3px;
+}
+
+.pa-laptop-base {
+  display: block;
+  width: 114%;
+  height: 12px;
+  margin-left: -7%;
+  border-radius: 2px 2px 12px 12px;
+  background: linear-gradient(to bottom, #2a3445, #121924);
+  box-shadow: 0 0 0 1px rgba(var(--spot-rgb), 0.25), 0 20px 40px rgba(0, 0, 0, 0.6);
+}
+
+.pa-device-label {
+  position: absolute;
+  top: calc(100% + 14px);
+  left: 50%;
+  color: var(--foreground);
+  font-family: var(--font-serif);
+  font-size: 14px;
+  white-space: nowrap;
+  transform: translateX(-50%);
+  transition: color 200ms ease;
+}
+
+.pa-device-label i {
+  margin-right: 6px;
+  color: var(--accent);
+  font-size: 11px;
+  text-shadow: var(--glow-text);
+}
+
+.pa-device:hover .pa-device-label {
+  color: var(--accent);
+}
+
+/* Y · Behind the score: 실제 코드 + 화면에 그리드 */
+.pa-code {
+  margin: 22px 0 0;
+  padding: 16px 18px;
+  overflow: auto;
+  border: 1px solid rgba(var(--accent-rgb), 0.3);
+  border-radius: 4px;
+  background: rgba(var(--accent-rgb), 0.04);
+  color: var(--foreground);
+  font-family: var(--font-mono);
+  font-size: 12px;
+  line-height: 1.7;
+  text-shadow: 0 0 8px rgba(var(--accent-rgb), 0.35);
+}
+
+.about-section.is-grid .pa-stage {
+  background:
+    repeating-linear-gradient(90deg, rgba(var(--accent-2-rgb), 0.16) 0 1px, transparent 1px calc(100% / 12)),
+    repeating-linear-gradient(0deg, rgba(var(--accent-2-rgb), 0.08) 0 1px, transparent 1px 48px),
+    #030508;
+}
+
+/* E · Instruments: 레코드 사진이 조명 아래 놓이고, 오른쪽에 트랙 목록 */
+.play-about.is-live :is(.pa-panel--instruments, .pa-panel--hello) {
+  left: 14%;
+  right: 14%;
+  width: auto;
+}
+
+/* 사진과 글을 무대 가운데에 가깝게 붙이고, 양옆은 넓게 비움 (K · E 공통) */
+:is(.pa-panel--instruments, .pa-panel--hello) {
+  display: grid;
+  grid-template-columns: auto minmax(0, 340px);
+  justify-content: center;
+  align-items: center;
+  gap: 36px;
+}
+
+:is(.pa-vinyl, .pa-photo) {
+  margin: 0;
+}
+
+:is(.pa-vinyl, .pa-photo) img {
+  display: block;
+  width: auto;
+  max-width: 100%;
+  height: calc(var(--stage-h) - 190px);
+  object-fit: contain;
+  border-radius: 4px;
+  box-shadow: 0 0 0 1px rgba(var(--spot-rgb), 0.25), 0 0 46px rgba(var(--spot-rgb), 0.18), 0 30px 60px rgba(0, 0, 0, 0.6);
+  opacity: 0;
+  transform: translateY(18px) rotate(-4deg);
+  transition: opacity 400ms ease, transform 400ms ease;
+}
+
+.pa-panel.is-on :is(.pa-vinyl, .pa-photo) img {
+  opacity: 1;
+  transform: rotate(-2.5deg);
+  transition: opacity 700ms ease 300ms, transform 900ms var(--stage-ease) 300ms;
+}
+
+.pa-tools {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  border-top: 1px solid rgba(var(--accent-rgb), 0.3);
+}
+
+.pa-tools li {
+  display: flex;
+  align-items: baseline;
+  gap: 18px;
+  padding: 16px 4px;
+  border-bottom: 1px solid rgba(var(--accent-rgb), 0.3);
+  font-family: var(--font-serif);
+  font-size: clamp(22px, 2.1vw, 32px);
+  letter-spacing: -0.02em;
+  opacity: 0;
+  transform: translateX(12px);
+  transition: opacity 300ms ease, transform 300ms ease;
+}
+
+.pa-tools li span {
+  min-width: 2em;
+  color: var(--accent);
+  font-size: 12px;
+  font-style: italic;
+  text-shadow: var(--glow-text);
+}
+
+.pa-panel.is-on .pa-tools li {
+  opacity: 1;
+  transform: none;
+  transition: opacity 500ms ease, transform 600ms var(--stage-ease);
+}
+
+.pa-panel.is-on .pa-tools li:nth-child(1) { transition-delay: 520ms; }
+.pa-panel.is-on .pa-tools li:nth-child(2) { transition-delay: 620ms; }
+.pa-panel.is-on .pa-tools li:nth-child(3) { transition-delay: 720ms; }
+.pa-panel.is-on .pa-tools li:nth-child(4) { transition-delay: 820ms; }
+
+/* K · Hello: 그림을 무대 높이만큼 크게, 글은 작게 — 그림이 주인공 (1920 화면 비율을 모든 화면에) */
+.pa-panel--hello .pa-photo img {
+  height: calc(var(--stage-h) - 130px);
+}
+
+.pa-panel--hello .pa-big {
+  font-size: clamp(28px, 2.4vw, 46px);
+}
+
+.pa-panel--hello .pa-text {
+  font-size: 12.5px;
+}
+
+.pa-panel.is-on .pa-photo img {
+  transform: rotate(2deg);
+}
+
+/* 앙코르 불꽃 */
+.pa-spark {
+  position: absolute;
+  bottom: 9%;
+  z-index: 4;
+  width: 3px;
+  height: 3px;
+  border-radius: 50%;
+  background: var(--hue, var(--accent));
+  box-shadow: 0 0 6px var(--hue, var(--accent)), 0 0 14px var(--hue, var(--accent));
+  pointer-events: none;
+}
+
+/* =========================================================
+   건반 = 무대 앞 풋라이트
+   ========================================================= */
+.pa-keys {
+  position: relative;
+  display: grid;
+  grid-template-columns: repeat(7, minmax(0, 1fr));
+  gap: 4px;
+  height: clamp(96px, 14svh, 140px);
+  padding: 0;
+  border-top: 1px solid rgba(var(--accent-rgb), 0.55);
+  box-shadow: 0 -1px 14px rgba(var(--accent-rgb), 0.3);
+}
+
+.pa-key {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 6px;
+  padding: 0 0 12px;
+  border: 1px solid rgba(var(--accent-rgb), 0.28);
+  border-top: 0;
+  border-radius: 0 0 6px 6px;
+  color: var(--foreground);
+  background: linear-gradient(to bottom, #0a1019 0%, #080d15 78%, #0f1724 78%, #0f1724 100%);
+  cursor: pointer;
+  transition: transform 160ms var(--stage-ease), background 240ms ease, border-color 240ms ease, box-shadow 240ms ease;
+}
+
+.pa-key em {
+  font-family: var(--font-serif);
+  font-size: clamp(18px, 1.7vw, 26px);
+  font-style: italic;
+}
+
+.pa-key-hint {
+  color: var(--muted-foreground);
+  font-size: 9px;
+  letter-spacing: 0.14em;
+  opacity: 0;
+  transition: opacity 200ms ease;
+}
+
+.pa-keys:hover .pa-key-hint,
+.pa-key:focus-visible .pa-key-hint {
+  opacity: 1;
+}
+
+/* 건반 위쪽 풋라이트: 누르면 켜지고 위로 빛을 쏨 */
+.pa-key-cap {
+  position: absolute;
+  top: 0;
+  left: 22%;
+  right: 22%;
+  height: 3px;
+  border-radius: 0 0 2px 2px;
+  background: rgba(var(--ink-rgb), 0.18);
+  transition: background 240ms ease, box-shadow 240ms ease;
+}
+
+.pa-key:hover {
+  background: linear-gradient(to bottom, #0f1828 0%, #0c1420 78%, #142033 78%, #142033 100%);
+}
+
+.pa-key.is-current {
+  border-color: rgba(var(--accent-rgb), 0.85);
+  background: linear-gradient(to bottom, #0e2438 0%, #0a1b2c 78%, #12304a 78%, #12304a 100%);
+  box-shadow: inset 0 0 26px rgba(var(--accent-rgb), 0.22), 0 0 22px rgba(var(--accent-rgb), 0.35);
+}
+
+.pa-key.is-current em {
+  color: var(--accent);
+  text-shadow: var(--glow-text);
+}
+
+.pa-key.is-current .pa-key-cap {
+  background: var(--accent);
+  box-shadow: var(--glow-line), 0 -24px 46px rgba(var(--accent-rgb), 0.45);
+}
+
+.pa-key.is-hit {
+  transform: translateY(5px);
+}
+
+.pa-key:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: -4px;
+}
+
+/* 검은건반 (장식) */
+.pa-black {
+  position: absolute;
+  top: 0;
+  left: calc(var(--b) * (100% / 7));
+  z-index: 2;
+  width: 5.2%;
+  height: 56%;
+  border: 1px solid rgba(var(--accent-2-rgb), 0.45);
+  border-top: 0;
+  border-radius: 0 0 4px 4px;
+  background: #070b12;
+  transform: translateX(-50%);
+  pointer-events: none;
+}
+
+/* 건반 아래: 키보드 안내 + 연주 진행(7칸) + 연락처 */
+.pa-foot {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 20px;
+  padding: 16px 0 0;
+  color: var(--muted-foreground);
+  font-size: 10px;
+  letter-spacing: 0.12em;
+}
+
+.pa-hint,
+.pa-contact {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin: 0;
+}
+
+.pa-kbd {
+  padding: 3px 7px;
+  border: 1px solid rgba(var(--ink-rgb), 0.3);
+  border-radius: 3px;
+  color: var(--foreground);
+}
+
+.pa-progress {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  margin-left: 14px;
+  color: rgba(var(--ink-rgb), 0.4);
+  font-size: 9px;
+  letter-spacing: 0.16em;
+}
+
+.pa-progress i {
+  width: 6px;
+  height: 6px;
+  border: 1px solid rgba(var(--accent-rgb), 0.45);
+  border-radius: 50%;
+  transition: background 200ms ease, box-shadow 200ms ease;
+}
+
+.pa-progress i.is-on {
+  border-color: var(--accent);
+  background: var(--accent);
+  box-shadow: var(--glow-line);
+}
+
+.pa-contact a {
+  color: var(--foreground);
+  text-decoration: none;
+}
+
+.pa-contact a:hover {
+  color: var(--accent);
+  text-shadow: var(--glow-text);
+}
+
+/* =========================================================
+   마무리: 작품으로
+   ========================================================= */
+.about-cta {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 20px;
+  margin-top: clamp(28px, 5vh, 52px);
+  padding-top: 24px;
+  border-top: 1px solid rgba(var(--ink-rgb), 0.2);
+}
+
+.about-cta-note {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  margin: 0;
+  color: var(--muted-foreground);
+  font-size: 9px;
+  letter-spacing: 0.16em;
+}
+
+.about-section .enter-index {
+  border-color: var(--accent);
+  color: var(--accent);
+  text-shadow: var(--glow-text);
+  box-shadow: var(--glow-box);
+}
+
+.about-section .enter-index:hover {
+  color: var(--background);
+  background: var(--accent);
+  text-shadow: none;
+}
+
+/* =========================================================
+   태블릿·모바일
+   ========================================================= */
+@media (max-width: 1050px) {
+  .play-about.is-live .pa-panel {
+    right: 6%;
+    width: 54%;
+  }
+}
+
+@media (max-width: 760px) {
+  .about-section {
+    padding: 48px 16px 36px;
+  }
+
+  .about-head .eyebrow {
+    display: none;
+  }
+
+  .pa-stage {
+    --spot-x: 50% !important;
+    --spot-tilt: 0deg !important;
+    --stage-h: clamp(520px, 74svh, 680px);
+  }
+
+  .pa-beam {
+    width: 120vw;
+  }
+
+  /* 모바일: 조각은 빛 아래 가운데, 마이크는 아래쪽 */
+  .play-about.is-live .pa-panel,
+  .play-about.is-live .pa-panel--analyze {
+    top: 68px;
+    left: 6%;
+    right: 6%;
+    width: auto;
+    transform: translateY(14px);
+  }
+
+  .play-about.is-live .pa-panel.is-on {
+    transform: none;
+  }
+
+  .play-about.is-live .pa-panel--title {
+    top: 18%;
+  }
+
+  /* M: 기기 크기를 화면 폭에 맞춤 */
+  .pa-panel--works {
+    --dev-h: 21svh;
+  }
+
+  .play-about.is-live .pa-panel--works {
+    top: auto;
+    bottom: calc(9% + 18px);
+  }
+
+  .pa-works-head {
+    flex-direction: column;
+    align-items: center;
+    gap: 10px;
+  }
+
+  .pa-device--phone {
+    padding: 3px;
+    border-radius: 14px;
+  }
+
+  .pa-device--phone .pa-screen {
+    border-radius: 11px;
+  }
+
+  .pa-device-label {
+    font-size: 11px;
+  }
+
+  /* I · Analyze: 피아노를 아래로 내려 바닥에 고인 빛 위에 놓음 */
+  .play-about.is-live .pa-panel--analyze {
+    top: auto;
+    bottom: 5%;
+  }
+
+  .pa-player {
+    width: 200px;
+    --player-nudge: 0px;
+    transform: translateX(-50%); /* 모바일은 빛이 수직이고 넓어서 그림 전체를 가운데에 */
+  }
+
+  .pa-name {
+    font-size: clamp(56px, 18vw, 84px);
+  }
+
+  :is(.pa-panel--instruments, .pa-panel--hello) {
+    grid-template-columns: 1fr;
+    gap: 18px;
+  }
+
+  :is(.pa-vinyl, .pa-photo) img,
+  .pa-panel--hello .pa-photo img {
+    height: 34svh;
+    margin-inline: auto;
+  }
+
+  .pa-tools li {
+    padding: 10px 2px;
+    font-size: 20px;
+  }
+
+  .pa-keys {
+    height: 84px;
+    gap: 2px;
+  }
+
+  .pa-key-hint,
+  .pa-kbd,
+  .pa-hint-text {
+    display: none;
+  }
+
+  .pa-foot {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 10px;
+  }
+
+  .pa-progress {
+    margin-left: 0;
+  }
+
+  .about-cta {
+    flex-direction: column;
+    align-items: stretch;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .pa-stage::before,
+  .pa-stage::after,
+  .pa-beam,
+  .pa-cue,
+  .pa-player .pa-reel {
+    animation: none;
+  }
+}

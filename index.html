@@ -1,30 +1,306 @@
 <!doctype html>
-<html lang="en">
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="theme-color" content="#141413" />
+  <meta name="description" content="PRESS PLAY. — 시각디자이너 김예일의 포트폴리오. UX/UI, 웹, 비주얼 작업." />
+  <meta property="og:title" content="PRESS PLAY. — Kim Yeil" />
+  <meta property="og:description" content="Visual designer Kim Yeil's selected works." />
+  <meta property="og:type" content="website" />
+  <title>PRESS PLAY. — Kim Yeil</title>
 
-  <head>
-    <meta charset="UTF-8" />
-    <meta
-      name="viewport"
-      content="width=device-width, initial-scale=1.0, maximum-scale=1" />
-    <meta name="theme-color" content="#eef4f7" />
-    <meta name="description" content="PRESS PLAY. — the selected works and moving-line practice of Seoul-based designer Kim Yeil." />
-    <meta property="og:title" content="PRESS PLAY. — Kim Yeil" />
-    <meta property="og:description" content="A living index of visual designer Kim Yeil's selected works." />
-    <meta property="og:type" content="website" />
-    <title>PRESS PLAY. — Kim Yeil</title>
-    <!-- THIS IS THE START OF A COMMENT BLOCK, BLOCK TO BE DELETED: Google Fonts here, example:
-    <link rel="preconnect" href="https://fonts.googleapis.com" />
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
-    THIS IS THE END OF A COMMENT BLOCK, BLOCK TO BE DELETED -->
-    <script type="module" crossorigin src="./assets/index-PcaC594M.js"></script>
-    <link rel="stylesheet" crossorigin href="./assets/index-D0w9J1VQ.css">
-  </head>
+  <!-- 불타는 종이 속 인트로 문장용 명조체 (인터넷이 없으면 기기의 명조체로 대체) -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Serif+KR:wght@400;500&display=swap" />
 
-  <body>
-    <div id="root"></div>
-    <script src="./api/platform/config.js"></script>
+  <link rel="stylesheet" href="css/tokens.css" />
+  <link rel="stylesheet" href="css/base.css" />
+  <link rel="stylesheet" href="css/landing.css" />
+  <link rel="stylesheet" href="css/about.css" />
+  <link rel="stylesheet" href="css/works.css" />
+  <link rel="stylesheet" href="css/burn.css" />
+  <link rel="stylesheet" href="css/intro.css" />
+  <link rel="stylesheet" href="css/neon.css" />
 
-  </body>
+  <!-- 인트로를 보여줄지 가장 먼저 결정 (화면 깜빡임 방지)
+       - 같은 창에서 이미 봤거나, #works로 바로 들어왔거나, '모션 줄이기' 사용자면 건너뜀 -->
+  <script>
+    (function () {
+      try {
+        var seen = window.sessionStorage.getItem("pp-intro-seen");
+        var reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+        if (!seen && !reduce && window.location.hash !== "#works") {
+          document.documentElement.classList.add("has-intro");
+        }
+      } catch (error) { /* 저장소를 쓸 수 없으면 인트로 없이 시작 */ }
+    })();
+  </script>
+</head>
+<body>
+  <!-- ===================== 인트로 (js/intro.js) ===================== -->
+  <div class="intro" data-intro aria-hidden="true">
+    <div class="intro-lines">
+      <span class="intro-track"></span>
+      <span class="intro-fill"></span>
+      <span class="intro-line" style="--k:0"></span>
+      <span class="intro-line" style="--k:1"></span>
+      <span class="intro-line" style="--k:2"></span>
+      <span class="intro-line" style="--k:3"></span>
+      <span class="intro-line" style="--k:4"></span>
+    </div>
+    <div class="intro-counter">
+      <span class="intro-digit"><span class="intro-digit-strip"><span>0</span><span>1</span><span>2</span><span>3</span><span>4</span><span>5</span><span>6</span><span>7</span><span>8</span><span>9</span></span></span>
+      <span class="intro-digit"><span class="intro-digit-strip"><span>0</span><span>1</span><span>2</span><span>3</span><span>4</span><span>5</span><span>6</span><span>7</span><span>8</span><span>9</span></span></span>
+      <span class="intro-digit"><span class="intro-digit-strip"><span>0</span><span>1</span><span>2</span><span>3</span><span>4</span><span>5</span><span>6</span><span>7</span><span>8</span><span>9</span></span></span>
+    </div>
+    <p class="intro-caption">KIM YEIL — PRESS PLAY.</p>
+  </div>
 
+  <div class="page-frame" aria-hidden="true"></div>
+
+  <!-- ===================== 처음 화면: 악보 랜딩 + 소개 ===================== -->
+  <div id="home" class="view view--home" data-page="score">
+
+    <!-- 01 · 악보 랜딩 -->
+    <section class="score-hero" aria-label="PRESS PLAY. — Kim Yeil">
+      <header class="landing-topbar">
+        <span class="landing-mark">PRESS PLAY<span>.</span></span>
+        <span class="landing-edition">KIM YEIL — PORTFOLIO 2026</span>
+        <button class="sound-toggle" type="button" aria-pressed="false">SOUND <span>OFF</span></button>
+      </header>
+
+      <main class="score-main">
+        <!-- 재생 버튼: 악보 위 가운데 -->
+        <button class="score-play" type="button"><span class="score-play-icon" aria-hidden="true"></span><span class="score-play-label">PRESS PLAY</span></button>
+        <h1 class="visually-hidden">Kim Yeil — PRESS PLAY. portfolio</h1>
+        <!-- 오선과 음표는 js/score.js가 채웁니다 -->
+        <div class="score" data-score></div>
+      </main>
+
+      <footer class="score-footer">
+        <p class="score-caption">
+          <span class="score-caption-name">Kim Yeil <span>김예일</span></span>
+          <span class="score-caption-role">VISUAL DESIGNER · UX/UI · WEB</span>
+        </p>
+        <a class="score-scroll" href="#about" data-turn="about">ABOUT <span aria-hidden="true">→</span></a>
+      </footer>
+    </section>
+
+    <!-- 02 · 소개 (ABOUT) — 기업 제출용 UX/UI · Product Designer 프로필
+         구조: 왼쪽 고정 프로필(01) + 오른쪽 콘텐츠(02–06). 아이보리 배경은 이 섹션에만 적용 -->
+    <!-- ===================== 02 ABOUT: 연주하는 소개 =====================
+         건반 K I M Y E I L(랜딩 악보의 철자)을 누르면 무대에 소개 조각이 펼쳐짐 (js/stage.js)
+         - 7개를 모두 연주하면 앙코르 / 키보드 A S D F G H J로도 연주
+         - 스크립트가 없으면 모든 조각이 차례로 보임 -->
+    <section class="about-section" id="about" aria-labelledby="about-title">
+      <div class="about-head"><span class="about-num">02</span><span class="about-rule"></span><span class="eyebrow">ABOUT — KIM YEIL</span><button class="turn-back" type="button" data-turn="score"><span aria-hidden="true">←</span> 01 SCORE</button></div>
+
+      <div class="play-about" data-play-about>
+        <div class="pa-stage" data-pa-stage aria-live="polite">
+          <!-- 조명·연기·빈 마이크 (장식) -->
+          <span class="pa-beam" aria-hidden="true"></span>
+          <span class="pa-pool" aria-hidden="true"></span>
+          <!-- 워크맨 + 헤드폰 (선 드로잉): 카세트 릴이 돌아가며 "재생 중" -->
+          <svg class="pa-player" viewBox="0 0 320 270" aria-hidden="true" focusable="false">
+            <rect x="12" y="116" width="104" height="146" rx="5" />
+            <path d="M12 134H116M100 116V262" />
+            <rect x="26" y="109" width="14" height="7" rx="1.5" />
+            <rect x="78" y="94" width="10" height="22" rx="1.5" />
+            <path d="M80 94V86H86V94" />
+            <rect x="32" y="152" width="44" height="90" rx="3" />
+            <rect class="pa-thin" x="38" y="158" width="32" height="78" rx="2" />
+            <g class="pa-reel"><circle cx="54" cy="174" r="9" /><path class="pa-thin" d="M54 165V183M45 174H63" /></g>
+            <g class="pa-reel"><circle cx="54" cy="220" r="9" /><path class="pa-thin" d="M54 211V229M45 220H63" /></g>
+            <rect x="46" y="188" width="16" height="18" rx="1" />
+            <rect class="pa-tape" x="46" y="194" width="16" height="7" />
+            <path class="pa-cord" d="M83 86C83 34 132 10 160 40C186 68 150 128 132 170C114 214 150 258 196 250C226 244 240 228 248 214" />
+            <path d="M196 140C192 52 300 52 296 140" />
+            <path class="pa-thin" d="M204 140C201 64 289 64 286 140" />
+            <rect x="190" y="138" width="14" height="50" rx="7" />
+            <rect class="pa-pad" x="202" y="146" width="7" height="34" rx="3.5" />
+            <rect x="288" y="138" width="14" height="50" rx="7" />
+            <rect class="pa-pad" x="283" y="146" width="7" height="34" rx="3.5" />
+            <path class="pa-cord" d="M197 188C197 210 226 214 248 214M295 188C295 212 268 214 248 214" />
+          </svg>
+
+          <button class="pa-mini" type="button" data-pa-home aria-label="처음 화면으로">Kim <em>Yeil.</em></button>
+          <p class="pa-counter" aria-hidden="true"><b data-pa-count>0</b> / 7 played</p>
+
+          <!-- 타이틀 카드 (처음 화면) -->
+          <div class="pa-panel pa-panel--title is-on" data-panel="title">
+            <h2 id="about-title" class="pa-name">Kim <em>Yeil.</em></h2>
+            <p class="pa-role">UX/UI Designer · Product Designer</p>
+            <p class="pa-line">정확한 구조 위에서, 더 나은 경험을 설계합니다.</p>
+            <p class="pa-cue"><span aria-hidden="true">▼</span> 건반을 눌러 저를 연주해 보세요</p>
+          </div>
+
+          <!-- K: 인사 — 창가에서 그림을 그리는 일러스트 + 인사 -->
+          <div class="pa-panel pa-panel--hello" data-panel="0">
+            <figure class="pa-photo">
+              <img src="asset/images/kim-yeil-hello.webp" width="679" height="1000" loading="lazy" alt="햇살이 드는 창가에 앉아 스케치북에 그림을 그리는 사람의 뒷모습 일러스트" />
+            </figure>
+            <div class="pa-hello-text">
+              <p class="pa-eyebrow"><b>K</b> Hello</p>
+              <h3 class="pa-big">Hello,<br />I'm Kim <em>Yeil.</em></h3>
+              <p class="pa-text">기존 서비스의 구조를 분석하고, 더 나은 흐름으로 다시 설계하는 UX/UI · Product Designer입니다.</p>
+            </div>
+          </div>
+
+          <!-- I: 분석 — 피아노 도면이 무대 위에서 연주됨 -->
+          <div class="pa-panel pa-panel--analyze" data-panel="1">
+            <p class="pa-eyebrow"><b>I</b> Analyze</p>
+            <div class="pa-analyze">
+              <section class="landing-art about-drawing" data-drawing aria-label="피아노 특허 도면">
+              <div class="patent-plate">
+                <div class="patent-artwork">
+                  <picture>
+                    <img class="landing-art-image" src="asset/images/kim-yeil-piano-cutout.webp" alt="그랜드 피아노 구조 도면 — 건반, 내부 현, 구조 번호" loading="lazy" />
+                  </picture>
+                </div>
+              </div>
+            </section>
+            </div>
+            <p class="pa-caption">피아노를 뜯어보듯, 서비스를 분석합니다. <span>도면의 01–05를 눌러 확대</span></p>
+          </div>
+
+          <!-- M: 작품 — 세 작품의 기기가 무대 위에 함께 섬 (노트북 Culture Pass 가운데, STILL·BITE 휴대폰이 앞 양옆)
+               기기를 누르면 인덱스의 그 작품으로 이동 -->
+          <div class="pa-panel pa-panel--works" data-panel="2">
+            <div class="pa-works-head">
+              <p class="pa-eyebrow"><b>M</b> Selected works</p>
+              <button class="pa-link" type="button" data-pa-work="0">인덱스에서 연주하기 ↗</button>
+            </div>
+            <div class="pa-devices">
+              <button class="pa-device pa-device--phone" type="button" data-pa-work="2" aria-label="STILL 작품 보기">
+                <span class="pa-screen"><img src="asset/images/screens/still-02-mobile-hero.webp" width="780" height="1688" loading="lazy" alt="" /></span>
+                <span class="pa-device-label"><i>03</i> STILL</span>
+              </button>
+              <button class="pa-device pa-device--laptop" type="button" data-pa-work="0" aria-label="Culture Pass 작품 보기">
+                <span class="pa-screen"><img src="asset/images/screens/culturepass-desktop.webp" width="1600" height="936" loading="lazy" alt="" /></span>
+                <span class="pa-laptop-base" aria-hidden="true"></span>
+                <span class="pa-device-label"><i>01</i> Culture Pass</span>
+              </button>
+              <button class="pa-device pa-device--phone" type="button" data-pa-work="1" aria-label="BITE 작품 보기">
+                <span class="pa-screen"><img src="asset/images/screens/bite-02-home.webp" width="780" height="1688" loading="lazy" alt="" /></span>
+                <span class="pa-device-label"><i>02</i> BITE</span>
+              </button>
+            </div>
+          </div>
+
+          <!-- Y: 이 사이트의 뒷면 — 누르면 화면에 레이아웃 그리드가 겹쳐짐 -->
+          <div class="pa-panel pa-panel--code" data-panel="3">
+            <p class="pa-eyebrow"><b>Y</b> Behind the score</p>
+            <h3 class="pa-big">This site is<br />my work, <em>too.</em></h3>
+            <pre class="pa-code" aria-label="이 사이트의 실제 코드 일부"><code>:root {
+  --background: #05070b;
+  --accent: #4cc9ff;
+  --accent-2: #6f7bff;
+}
+.piano-key.is-pressed {
+  transform: translateY(5px);
+}</code></pre>
+            <p class="pa-text">HTML · CSS · JavaScript로 직접 설계하고 구현했습니다. 빌드 도구도, 라이브러리도 없이.</p>
+          </div>
+
+          <!-- E: 도구 — 투명 레코드 사진(라벨: Kim Yeil — Instruments) + 트랙 목록 -->
+          <div class="pa-panel pa-panel--instruments" data-panel="4">
+            <figure class="pa-vinyl">
+              <img src="asset/images/kim-yeil-instruments-vinyl.webp?v=2" width="900" height="937" loading="lazy" alt="손에 든 투명 레코드판. 라벨에 손글씨로 Kim Yeil, Instruments라고 적혀 있다" />
+            </figure>
+            <div class="pa-tracklist">
+              <p class="pa-eyebrow"><b>E</b></p>
+              <ol class="pa-tools">
+                <li><span>A1</span>Figma</li>
+                <li><span>A2</span>Photoshop</li>
+                <li><span>B1</span>Illustrator</li>
+                <li><span>B2</span>HTML / CSS / JS</li>
+              </ol>
+            </div>
+          </div>
+
+          <!-- I: 다음 무대 -->
+          <div class="pa-panel" data-panel="5">
+            <p class="pa-eyebrow"><b>I</b> Next stage</p>
+            <h3 class="pa-big">BEYOND<br />THE <em>FRAME.</em></h3>
+            <p class="pa-text">졸업 전시 · 2026.11.16–17<br />한국폴리텍대학 정수캠퍼스 시각디자인과 · 2027.02 졸업 예정</p>
+          </div>
+
+          <!-- L: 연락 -->
+          <div class="pa-panel" data-panel="6">
+            <p class="pa-eyebrow"><b>L</b> Contact</p>
+            <h3 class="pa-big">Let's play<br /><em>together.</em></h3>
+            <p class="pa-text"><a class="pa-mail" href="mailto:rubyyale0311@gmail.com">rubyyale0311@gmail.com ↗</a></p>
+          </div>
+
+          <!-- 앙코르: 7개를 모두 연주하면 -->
+          <div class="pa-panel pa-panel--encore" data-panel="encore">
+            <p class="pa-eyebrow"><b>♪</b> Encore</p>
+            <h3 class="pa-big">Thanks for<br /><em>playing.</em></h3>
+            <p class="pa-text">끝까지 연주해 주셨네요. 다음 무대는 함께 만들어요.</p>
+            <p class="pa-text"><a class="pa-mail" href="mailto:rubyyale0311@gmail.com">메일 보내기 ↗</a></p>
+          </div>
+        </div>
+
+        <div class="pa-keys" role="group" aria-label="소개 건반: 누르면 소개가 펼쳐집니다">
+          <button class="pa-key" type="button" data-pa-key="0" aria-pressed="false" aria-label="K — Hello"><span class="pa-key-cap" aria-hidden="true"></span><em>K</em><small class="pa-key-hint" aria-hidden="true">A</small></button>
+          <button class="pa-key" type="button" data-pa-key="1" aria-pressed="false" aria-label="I — Analyze"><span class="pa-key-cap" aria-hidden="true"></span><em>I</em><small class="pa-key-hint" aria-hidden="true">S</small></button>
+          <button class="pa-key" type="button" data-pa-key="2" aria-pressed="false" aria-label="M — Selected works"><span class="pa-key-cap" aria-hidden="true"></span><em>M</em><small class="pa-key-hint" aria-hidden="true">D</small></button>
+          <button class="pa-key" type="button" data-pa-key="3" aria-pressed="false" aria-label="Y — Behind the score"><span class="pa-key-cap" aria-hidden="true"></span><em>Y</em><small class="pa-key-hint" aria-hidden="true">F</small></button>
+          <button class="pa-key" type="button" data-pa-key="4" aria-pressed="false" aria-label="E — Instruments"><span class="pa-key-cap" aria-hidden="true"></span><em>E</em><small class="pa-key-hint" aria-hidden="true">G</small></button>
+          <button class="pa-key" type="button" data-pa-key="5" aria-pressed="false" aria-label="I — Next stage"><span class="pa-key-cap" aria-hidden="true"></span><em>I</em><small class="pa-key-hint" aria-hidden="true">H</small></button>
+          <button class="pa-key" type="button" data-pa-key="6" aria-pressed="false" aria-label="L — Contact"><span class="pa-key-cap" aria-hidden="true"></span><em>L</em><small class="pa-key-hint" aria-hidden="true">J</small></button>
+          <span class="pa-black" style="--b:1" aria-hidden="true"></span>
+          <span class="pa-black" style="--b:2" aria-hidden="true"></span>
+          <span class="pa-black" style="--b:4" aria-hidden="true"></span>
+          <span class="pa-black" style="--b:5" aria-hidden="true"></span>
+          <span class="pa-black" style="--b:6" aria-hidden="true"></span>
+        </div>
+
+        <div class="pa-foot">
+          <p class="pa-hint"><span class="pa-kbd">A – J</span><span class="pa-hint-text">키보드로도 연주할 수 있어요</span><span class="pa-progress" aria-hidden="true">모두 연주하면 앙코르 <i></i><i></i><i></i><i></i><i></i><i></i><i></i></span></p>
+          <p class="pa-contact"><a href="mailto:rubyyale0311@gmail.com">rubyyale0311@gmail.com</a><span aria-hidden="true">·</span><a href="https://03yeil-kim.github.io/" target="_blank" rel="noopener">03yeil-kim.github.io</a></p>
+        </div>
+      </div>
+
+      <div class="about-cta">
+            <p class="about-cta-note"><span class="landing-footer-dot"></span>03 SELECTED WORKS — Culture Pass · BITE · STILL</p>
+            <button class="enter-index" type="button" data-enter-index><span>ENTER THE INDEX</span><span class="enter-index-arrow">↗</span></button>
+          </div>
+    </section>
+
+    <!-- ABOUT → 작품: 스크롤하면 기울어진 종이가 펴지며 아래부터 타고, 검은 작품 화면이 드러남 (js/burn.js)
+         스크립트가 없거나 '동작 줄이기' 설정이면 표시하지 않음 (ENTER THE INDEX 버튼으로 이동) -->
+    <section class="about-burn" data-burn aria-label="SELECTED WORKS로 넘어가기">
+      <div class="burn-stage">
+        <div class="burn-backdrop" aria-hidden="true">
+          <p class="burn-word">Selected</p>
+          <p class="burn-word">Works<span>.</span></p>
+        </div>
+        <!-- 인트로덕션: 불타는 종이 위의 문장 (js/burn.js가 같은 문장을 종이에 그림. 스크립트가 없으면 이 글자가 보임) -->
+        <div class="burn-statement" data-burn-statement>
+          <p class="burn-statement-label">Introduction</p>
+          <p class="burn-statement-copy">완벽하지는 않아도,<br />기본기부터 단단하게 다지며<br />동작하는 가치를 만들어갑니다.</p>
+        </div>
+        <p class="burn-copy"><span>03 — SELECTED WORKS</span>Culture Pass · BITE · STILL</p>
+        <div class="burn-sheet-wrap"><canvas class="burn-sheet" aria-hidden="true"></canvas><canvas class="burn-glow" aria-hidden="true"></canvas></div>
+        <p class="burn-hint" aria-hidden="true">SCROLL TO ENTER <span>↓</span></p>
+      </div>
+    </section>
+  </div>
+
+  <!-- ===================== 작품 화면 (js/works.js가 채움) ===================== -->
+  <div id="works" class="view view--works" hidden></div>
+
+  <!-- 순서 중요: data.js가 가장 먼저 -->
+  <script src="js/data.js"></script>
+  <script src="js/score.js"></script>
+  <script src="js/drawing.js"></script>
+  <script src="js/burn.js"></script>
+  <script src="js/works.js"></script>
+  <script src="js/stage.js"></script>
+  <script src="js/main.js"></script>
+  <script src="js/intro.js"></script>
+</body>
 </html>

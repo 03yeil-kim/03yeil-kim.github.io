@@ -1,0 +1,204 @@
+/* =========================================================
+   PRESS PLAY. — Intro: 선 하나 → 오선 다섯 줄 (Lusion식 로딩 인트로)
+   1) 가운데 선이 차오르고 왼쪽 아래 숫자가 000 → 100으로 굴러감
+   2) 다 찬 선이 오선 자리로 늘어나며 다섯 줄로 갈라짐
+   3) 배경이 걷히면 그 오선이 그대로 악보 랜딩의 오선이 됨
+   ========================================================= */
+
+.intro {
+  display: none;
+}
+
+/* index.html <head>의 짧은 스크립트가 인트로를 보여줄 때만 html에 붙이는 클래스 */
+/* is-active: 배경이 걷히는 마지막 순간까지 인트로를 유지하기 위한 클래스 (intro.js가 붙임) */
+.has-intro .intro,
+.intro.is-active {
+  position: fixed;
+  z-index: 100;
+  inset: 0;
+  display: block;
+  background: var(--background);
+  /* 스크립트 오류가 나도 8초 뒤에는 인트로가 사라지게 하는 안전장치 */
+  animation: intro-failsafe 0s 8s forwards;
+}
+
+.has-intro body {
+  overflow: hidden;
+}
+
+/* 인트로가 도는 동안 뒤쪽 랜딩의 애니메이션은 멈춰 둠 */
+.has-intro .view--home,
+.has-intro .view--home * {
+  animation-play-state: paused !important;
+}
+
+.intro.is-revealing {
+  background: transparent;
+  transition: background-color 450ms ease;
+}
+
+/* ---------- 선 ---------- */
+.intro-lines {
+  --gap: 0px;     /* 오선 간격: intro.js가 랜딩 오선에 맞춰 넣음 */
+  --spread: 0;    /* 0 = 한 줄로 겹침, 1 = 다섯 줄로 펼침 */
+  position: absolute;
+  top: 50%;
+  left: calc(50% - 70px);
+  width: 140px;
+  height: 0;
+  transition:
+    top 650ms cubic-bezier(0.65, 0, 0.2, 1),
+    left 650ms cubic-bezier(0.65, 0, 0.2, 1),
+    width 650ms cubic-bezier(0.65, 0, 0.2, 1);
+}
+
+.intro-track,
+.intro-fill {
+  position: absolute;
+  top: -1px;
+  left: 0;
+  width: 100%;
+  height: 2px;
+}
+
+.intro-track {
+  background: rgba(var(--ink-rgb), 0.16);
+  transition: opacity 200ms ease;
+}
+
+.intro-fill {
+  background: var(--foreground);
+  transform: scaleX(0);
+  transform-origin: left center;
+}
+
+.intro-line {
+  position: absolute;
+  left: 0;
+  width: 100%;
+  height: 1px;
+  top: calc((var(--k) - 2) * var(--gap) * var(--spread));
+  background: var(--foreground);
+  opacity: 0;
+  transition:
+    top 560ms cubic-bezier(0.3, 0, 0.1, 1),
+    opacity 300ms ease;
+}
+
+/* 2단계: 선이 오선 자리로 늘어남 */
+.intro.is-expanding .intro-track {
+  opacity: 0;
+}
+
+.intro.is-expanding .intro-fill {
+  opacity: 0;
+  transition: opacity 260ms 120ms ease;
+}
+
+.intro.is-expanding .intro-line {
+  opacity: 0.55;
+}
+
+/* 3단계: 다섯 줄로 갈라짐 */
+.intro.is-splitting .intro-lines {
+  --spread: 1;
+}
+
+/* ---------- 카운터 (000 → 100) ---------- */
+.intro-counter {
+  position: absolute;
+  left: 34px;
+  bottom: 26px;
+  display: flex;
+  height: 1em;
+  overflow: hidden;
+  color: var(--accent);
+  font-family: var(--font-sans);
+  font-size: clamp(72px, 13vw, 190px);
+  font-variant-numeric: tabular-nums;
+  letter-spacing: -0.04em;
+  line-height: 1;
+  transition: opacity 300ms ease, transform 420ms cubic-bezier(0.6, 0, 0.3, 1);
+}
+
+.intro-digit {
+  display: block;
+  height: 1em;
+  overflow: hidden;
+}
+
+.intro-digit-strip {
+  display: flex;
+  flex-direction: column;
+  transform: translateY(calc(var(--d, 0) * -1em));
+  transition: transform 420ms cubic-bezier(0.5, 0, 0.15, 1);
+}
+
+.intro-digit-strip span {
+  display: block;
+  height: 1em;
+}
+
+.intro-caption {
+  position: absolute;
+  right: 36px;
+  bottom: 34px;
+  color: var(--muted-foreground);
+  font-family: var(--font-mono);
+  font-size: 10px;
+  letter-spacing: 0.2em;
+  transition: opacity 300ms ease;
+}
+
+.intro.is-expanding .intro-counter {
+  opacity: 0;
+  transform: translateY(30%);
+}
+
+.intro.is-expanding .intro-caption {
+  opacity: 0;
+}
+
+/* ---------- 인트로 직후 랜딩 ----------
+   오선은 인트로가 이미 그려 놓았으므로 다시 그리지 않고, 나머지는 바로 이어서 등장 */
+.view--home.from-intro {
+  animation: none;
+}
+
+.from-intro .staff-line {
+  animation: none;
+  transform: none;
+}
+
+.from-intro .score-bar {
+  animation-delay: 0ms;
+}
+
+.from-intro .score-marks,
+.from-intro .score-clef {
+  animation-delay: 80ms;
+}
+
+.from-intro .note-head {
+  animation-delay: calc(220ms + var(--n) * 70ms);
+}
+
+@keyframes intro-failsafe {
+  to {
+    visibility: hidden;
+    pointer-events: none;
+  }
+}
+
+@media (max-width: 760px) {
+  .intro-counter {
+    left: 20px;
+    bottom: 22px;
+  }
+
+  .intro-caption {
+    right: 22px;
+    bottom: 28px;
+    font-size: 8px;
+  }
+}

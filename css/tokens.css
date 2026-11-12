@@ -1,0 +1,36 @@
+/* =========================================================
+   PRESS PLAY. — Design Tokens
+   Mood: Blue Signal (차가운 블루 무대 · 네온) — 이전: Signal(그린), Night Concert
+   색·서체를 바꿀 때는 이 파일만 수정합니다.
+   ========================================================= */
+:root {
+  /* Color — Blue Signal (네온) */
+  --background: #05070b;        /* 블루 블랙 (무대 어둠) */
+  --foreground: #dce8f5;        /* 아이스 화이트 */
+  --muted-foreground: #7d8ca1;  /* 보조 글자 */
+  --accent: #4cc9ff;            /* 아이스 블루 (주 네온) */
+  --accent-2: #6f7bff;          /* 일렉트릭 인디고 (보조 네온) */
+  --card: #0a1019;              /* 패널·미리보기 바탕 */
+  --secondary: #0f1724;
+  --input: #1b2638;
+
+  /* 위 색의 RGB 값: 반투명 선·테두리·글로우에 사용 (색을 바꾸면 함께 수정) */
+  --ink-rgb: 220, 232, 245;     /* = --foreground */
+  --accent-rgb: 76, 201, 255;   /* = --accent */
+  --accent-2-rgb: 111, 123, 255; /* = --accent-2 */
+  --spot-rgb: 190, 220, 255;    /* 무대 스포트라이트 (차가운 블루 화이트) */
+
+  /* Glow — 네온 빛 번짐 (css/neon.css에서 사용) */
+  --glow-text: 0 0 2px rgba(var(--accent-rgb), 0.9), 0 0 10px rgba(var(--accent-rgb), 0.65), 0 0 28px rgba(var(--accent-rgb), 0.35);
+  --glow-text-2: 0 0 2px rgba(var(--accent-2-rgb), 0.9), 0 0 10px rgba(var(--accent-2-rgb), 0.7), 0 0 28px rgba(var(--accent-2-rgb), 0.4);
+  --glow-text-ink: 0 0 2px rgba(var(--ink-rgb), 0.55), 0 0 12px rgba(var(--accent-rgb), 0.25);
+  --glow-line: 0 0 3px rgba(var(--accent-rgb), 0.9), 0 0 10px rgba(var(--accent-rgb), 0.55), 0 0 22px rgba(var(--accent-rgb), 0.3);
+  --glow-line-2: 0 0 3px rgba(var(--accent-2-rgb), 0.9), 0 0 10px rgba(var(--accent-2-rgb), 0.6), 0 0 22px rgba(var(--accent-2-rgb), 0.3);
+  --glow-box: 0 0 0 1px rgba(var(--accent-rgb), 0.9), 0 0 14px rgba(var(--accent-rgb), 0.45), 0 0 36px rgba(var(--accent-rgb), 0.2);
+
+  /* Type */
+  --font-serif: Georgia, "Times New Roman", serif;
+  --font-sans: Arial, Helvetica, sans-serif;
+  --font-mono: "Courier New", Courier, monospace;
+  --font-serif-kr: "Noto Serif KR", "Noto Serif CJK KR", "Nanum Myeongjo", Batang, Georgia, serif;
+}

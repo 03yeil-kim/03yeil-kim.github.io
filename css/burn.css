@@ -1,0 +1,194 @@
+/* =========================================================
+   PRESS PLAY. — burn.css
+   ABOUT → 작품 전환: 기울어진 종이가 펴지며 아래부터 타들어 가고,
+   타서 사라진 자리로 검은 SELECTED WORKS 화면이 드러남 (js/burn.js)
+   ========================================================= */
+/* 기본(스크립트 없음·동작 줄이기): 인트로 문장을 글자로 보여 주는 정적인 검은 구간 */
+.about-burn {
+  display: none;
+  position: relative;
+  color: var(--foreground);
+  background: var(--background);
+}
+
+.view--home[data-page="about"] .about-burn {
+  display: block;
+}
+
+/* 애니메이션 사용(html.has-burn): 스크롤 길이 = 펴짐 + 타들어 감 */
+.has-burn .about-burn {
+  height: 260vh;
+}
+
+.burn-stage {
+  position: relative;
+  min-height: 70vh;
+  overflow: hidden;
+  display: grid;
+  place-items: center;
+  perspective: 1400px;
+}
+
+.has-burn .burn-stage {
+  position: sticky;
+  top: 0;
+  height: 100vh;
+  height: 100svh;
+}
+
+/* 인트로 문장: 기본은 글자로 보이고, 애니메이션을 쓸 때는 종이(캔버스)에 그려지므로 화면에서만 숨김 */
+.burn-statement {
+  position: relative;
+  z-index: 2;
+  max-width: min(86vw, 640px);
+  padding: 48px 0;
+}
+
+.burn-statement-label {
+  margin: 0 0 18px;
+  color: var(--accent);
+  font-size: 11px;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+}
+
+.burn-statement-copy {
+  margin: 0;
+  font-family: var(--font-serif-kr);
+  font-size: clamp(22px, 2.4vw, 34px);
+  letter-spacing: -0.03em;
+  line-height: 1.55;
+  word-break: keep-all;
+}
+
+.has-burn .burn-statement {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+}
+
+/* 애니메이션이 없을 때는 종이·안내를 감춤 */
+.about-burn:not(.is-ready) .burn-sheet-wrap,
+.about-burn:not(.is-ready) .burn-hint,
+.about-burn:not(.is-ready) .burn-backdrop {
+  display: none;
+}
+
+/* 종이 뒤에 드러나는 큰 글자 */
+.burn-backdrop {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding: 0 clamp(20px, 4vw, 64px);
+  pointer-events: none;
+}
+
+.burn-word {
+  margin: 0;
+  font-family: var(--font-serif);
+  font-size: clamp(84px, 15.5vw, 280px);
+  letter-spacing: -0.05em;
+  line-height: 0.86;
+  white-space: nowrap;
+}
+
+.burn-word + .burn-word {
+  align-self: flex-end;
+  font-style: italic;
+}
+
+.burn-word span {
+  color: var(--accent);
+}
+
+.burn-copy {
+  position: absolute;
+  left: clamp(20px, 4vw, 64px);
+  bottom: clamp(24px, 5vh, 48px);
+  margin: 0;
+  color: var(--muted-foreground);
+  font-size: 11px;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+}
+
+.burn-copy span {
+  display: block;
+  margin-bottom: 8px;
+  color: var(--accent);
+}
+
+/* 종이(캔버스): 기울기·크기는 js/burn.js가 스크롤에 맞춰 조절 */
+.burn-sheet-wrap {
+  position: relative;
+  z-index: 1;
+  width: min(40vw, 470px, calc((100svh - 120px) * 0.75));
+  aspect-ratio: 3 / 4;
+  transform-style: preserve-3d;
+  will-change: transform;
+}
+
+.burn-sheet {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
+/* 불꽃 번짐: 작은 캔버스를 늘려 GPU 블러로 처리 (매 프레임 계산 부담을 줄임) */
+.burn-glow {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  filter: blur(9px);
+  mix-blend-mode: screen;
+  opacity: 0.85;
+  pointer-events: none;
+}
+
+.burn-hint {
+  position: absolute;
+  right: clamp(20px, 4vw, 64px);
+  bottom: clamp(24px, 5vh, 48px);
+  margin: 0;
+  color: var(--foreground);
+  font-size: 11px;
+  letter-spacing: 0.2em;
+  transition: opacity 300ms ease;
+}
+
+.burn-hint span {
+  display: inline-block;
+  margin-left: 6px;
+  color: var(--accent);
+  animation: burn-hint-bob 1.6s ease-in-out infinite;
+}
+
+.about-burn.is-burning .burn-hint {
+  opacity: 0;
+}
+
+@keyframes burn-hint-bob {
+  50% { transform: translateY(4px); }
+}
+
+@media (max-width: 760px) {
+  .burn-sheet-wrap {
+    width: min(76vw, calc((100svh - 160px) * 0.75));
+  }
+
+  .burn-word {
+    font-size: clamp(64px, 21vw, 110px);
+  }
+
+  .burn-hint {
+    top: 24px;
+    bottom: auto;
+  }
+}

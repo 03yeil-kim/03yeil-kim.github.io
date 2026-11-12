@@ -1,0 +1,219 @@
+/* =========================================================
+   PRESS PLAY. — neon.css
+   Mood: Blue Signal (차가운 블루 · 네온) — 빛 번짐(글로우) 전용 파일
+   - 색 값은 css/tokens.css, 이 파일은 "빛"만 더합니다.
+   - 이 파일을 index.html에서 빼면 글로우 없이 Signal 색만 남습니다.
+   - 02 ABOUT 무대(스포트라이트·연기)는 css/about.css에 있습니다.
+   ========================================================= */
+
+::selection {
+  color: var(--background);
+  background: var(--accent);
+}
+
+/* ---------- 인트로: 차오르는 선 + 숫자 ---------- */
+.intro-fill,
+.intro-line {
+  background: var(--accent);
+  box-shadow: var(--glow-line);
+}
+
+.intro-counter {
+  text-shadow: var(--glow-text);
+}
+
+/* ---------- 01 악보 랜딩 ---------- */
+.landing-mark span,
+.wordmark-period {
+  color: var(--accent);
+  text-shadow: var(--glow-text);
+}
+
+.score-clef {
+  color: var(--accent-2);
+  text-shadow: var(--glow-text-2);
+}
+
+/* 오선 · 마디선: 블루 네온관 */
+.staff-line {
+  background: var(--accent);
+  opacity: 0.8;
+  box-shadow: var(--glow-line);
+}
+
+.score-bar,
+.score-bar--end::after {
+  background: var(--accent);
+  box-shadow: var(--glow-line);
+}
+
+/* 음표: KIM = 인디고, YEIL = 아이스 블루 */
+.score-note .note-head,
+.score-note .note-head::after {
+  background: var(--accent-2);
+  box-shadow: var(--glow-line-2);
+}
+
+.score-note .note-letter {
+  color: var(--accent-2);
+  text-shadow: var(--glow-text-2);
+}
+
+.score-note.is-accent .note-head,
+.score-note.is-accent .note-head::after {
+  background: var(--accent);
+  box-shadow: var(--glow-line);
+}
+
+.score-note.is-accent .note-letter {
+  color: var(--accent);
+  text-shadow: var(--glow-text);
+}
+
+.note-ripple {
+  border-color: var(--accent);
+  box-shadow: var(--glow-line);
+}
+
+/* 재생선 */
+.score-playhead,
+.score-playhead::before {
+  box-shadow: var(--glow-line);
+}
+
+/* PRESS PLAY 버튼: 네온 간판 (블루 글자·테두리 + 인디고 바닥) */
+.score-play {
+  color: var(--accent);
+  border-color: var(--accent);
+  background: rgba(var(--accent-rgb), 0.06);
+  text-shadow: var(--glow-text);
+  box-shadow: 0 6px 0 var(--accent-2), var(--glow-box);
+}
+
+.score-play:hover {
+  background: rgba(var(--accent-rgb), 0.12);
+  box-shadow: 0 7px 0 var(--accent-2), var(--glow-box);
+}
+
+.score-play:active {
+  box-shadow: 0 0 0 var(--accent-2), var(--glow-box);
+}
+
+@keyframes play-breathe {
+  0%, 100% { box-shadow: 0 6px 0 var(--accent-2), var(--glow-box); }
+  50% { box-shadow: 0 6px 0 var(--accent-2), 0 0 0 1px rgba(var(--accent-rgb), 1), 0 0 24px rgba(var(--accent-rgb), 0.7), 0 0 60px rgba(var(--accent-rgb), 0.35); }
+}
+
+.score-scroll span,
+.landing-edition,
+.sound-toggle[aria-pressed="true"] span {
+  text-shadow: var(--glow-text);
+}
+
+.score-footer {
+  border-top-color: var(--accent);
+  box-shadow: 0 -1px 8px rgba(var(--accent-rgb), 0.35);
+}
+
+.score-caption-name {
+  text-shadow: var(--glow-text-ink);
+}
+
+/* ---------- ABOUT → 작품 전환 (타는 종이) ---------- */
+.burn-word {
+  text-shadow: var(--glow-text-ink);
+}
+
+.burn-word span,
+.burn-copy span {
+  color: var(--accent);
+  text-shadow: var(--glow-text);
+}
+
+/* ---------- 작품 화면 ---------- */
+.work-kicker {
+  text-shadow: var(--glow-text);
+}
+
+.title-wrap h1 {
+  text-shadow: 0 0 2px rgba(var(--ink-rgb), 0.7), 0 0 18px rgba(var(--accent-2-rgb), 0.45), 0 0 44px rgba(var(--accent-2-rgb), 0.25);
+}
+
+.status-dot {
+  box-shadow: var(--glow-line);
+}
+
+.index-line,
+.topbar-rule,
+.dock-side-line {
+  background: var(--accent);
+  box-shadow: var(--glow-line);
+}
+
+.prototype-mode-button.is-selected {
+  text-shadow: var(--glow-text);
+}
+
+.art-frame,
+.prototype-preview {
+  box-shadow: 0 0 0 1px rgba(var(--accent-rgb), 0.35), 0 0 30px rgba(var(--accent-rgb), 0.08);
+}
+
+/* 건반: 어두운 건반 + 블루 테두리, 눌린 건반은 네온으로 점등 */
+.key-dock {
+  border-top-color: var(--accent);
+  box-shadow: 0 -1px 10px rgba(var(--accent-rgb), 0.35);
+}
+
+.piano-keys {
+  border-color: var(--accent);
+  box-shadow: 0 5px 0 var(--accent-2), 0 0 18px rgba(var(--accent-rgb), 0.35);
+}
+
+.piano-key {
+  border-left-color: rgba(var(--accent-rgb), 0.35);
+  background: linear-gradient(to bottom, #0a1019 0%, #080d15 75%, #0f1724 75%, #0f1724 100%);
+}
+
+.piano-key:hover {
+  background: linear-gradient(to bottom, #0f1828 0%, #0c1420 75%, #142033 75%, #142033 100%);
+}
+
+.piano-key.is-active,
+.piano-key.is-pressed {
+  color: var(--accent);
+  background: linear-gradient(to bottom, #0e2438 0%, #0a1b2c 75%, #12304a 75%, #12304a 100%);
+  box-shadow: inset 0 4px 0 var(--accent), inset 0 0 26px rgba(var(--accent-rgb), 0.25), 0 0 22px rgba(var(--accent-rgb), 0.45);
+  text-shadow: var(--glow-text);
+}
+
+.piano-key.is-active .key-number,
+.piano-key.is-pressed .key-number {
+  color: rgba(var(--accent-rgb), 0.7);
+}
+
+.piano-key.is-active .key-arrow,
+.piano-key.is-pressed .key-arrow {
+  color: var(--accent-2);
+  text-shadow: var(--glow-text-2);
+}
+
+.key-cap {
+  background: rgba(var(--ink-rgb), 0.75);
+  box-shadow: 0 2px 2px rgba(0, 0, 0, 0.6);
+}
+
+.piano-key.is-active .key-cap,
+.piano-key.is-pressed .key-cap {
+  background: var(--accent);
+  box-shadow: var(--glow-line);
+}
+
+.key-arrow {
+  text-shadow: var(--glow-text);
+}
+
+/* ---------- 모션 줄이기: 깜박임 없이 고정 글로우만 ---------- */
+@media (prefers-reduced-motion: reduce) {
+  .score-play { animation: none; }
+}
